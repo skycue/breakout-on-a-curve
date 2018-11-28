@@ -22,6 +22,6 @@ The scripts involved in this project in addition to the entry file will be:
 The game will be a screen with the game board, along with game controls that allow the user to start, pause, and reset the game setup on the top of the screen.  There will also be nav links to my GitHub and LinkedIn next to the game controls.
 
 ### Implementation Timeline
-Day 1:  Get project set up, with a basic entry file and script files. Get practice with and learn basics of CanvasJS.
-Day 2:  Begin constructing the logic and the rendering of the game.
-Day 3:  Complete logic and rendering of the game.  Add user controls for start, pause, and reset.  
+* Day 1:  Get project set up, with a basic entry file and script files. Get practice with and learn basics of CanvasJS.
+* Day 2:  Begin constructing the logic and the rendering of the game.
+* Day 3:  Complete logic and rendering of the game.  Add user controls for start, pause, and reset.  

@@ -1,6 +1,5 @@
 class Ball {
   constructor(options) {
-    this.draw(options.ctx);
   }
 
   draw(ctx) {

@@ -95,7 +95,6 @@
 
 class Ball {
   constructor(options) {
-    this.draw(options.ctx);
   }
 
   draw(ctx) {
@@ -112,6 +111,33 @@ module.exports = Ball;
 
 /***/ }),
 
+/***/ "./src/game_screen.js":
+/*!****************************!*\
+  !*** ./src/game_screen.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
+
+class GameScreen {
+  constructor(canvas, ctx) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+
+    this.draw(ctx);
+  }
+
+  draw(ctx) {
+    new Ball().draw(this.ctx)
+  }
+}
+
+module.exports = GameScreen;
+
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -119,45 +145,14 @@ module.exports = Ball;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-const MovingObject = __webpack_require__(/*! ./moving_object */ "./src/moving_object.js");
-const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
+const GameScreen = __webpack_require__(/*! ./game_screen */ "./src/game_screen.js");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvasEl = document.getElementById("myCanvas");
-  const ctx = canvasEl.getContext("2d");
+  const canvas = document.getElementById("myCanvas");
+  const ctx = canvas.getContext("2d");
   console.log("Webpack is working!");
-  new Ball({ctx});
+  new GameScreen(canvas, ctx);
 });
-
-
-/***/ }),
-
-/***/ "./src/moving_object.js":
-/*!******************************!*\
-  !*** ./src/moving_object.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-class MovingObject {
-  constructor(options) {
-    // this.position = options.position;
-    // this.velocity = options.velocity;
-    // this.color = options.color;
-    this.draw(options.ctx);
-  }
-
-  draw(ctx) {
-    ctx.beginPath();
-    // ctx.fillStyle = this.color;
-    ctx.rect(40, 30, 50, 50);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.closePath();
-  }
-}
-
-module.exports = MovingObject;
 
 
 /***/ })

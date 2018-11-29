@@ -94,15 +94,18 @@
 /***/ (function(module, exports) {
 
 class Ball {
-  constructor(options) {
+  constructor(ctx, xPos, yPos) {
+    this.ctx = ctx;
+    this.x = xPos;
+    this.y = yPos;
   }
 
-  draw(ctx) {
-    ctx.beginPath();
-    ctx.arc(200, 300, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.closePath();
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+    this.ctx.fillStyle = "green";
+    this.ctx.fill();
+    this.ctx.closePath();
   }
 }
 
@@ -125,11 +128,19 @@ class GameScreen {
     this.ctx = ctx;
     this.canvas = canvas;
 
-    this.draw(ctx);
+    this.dx = 0.1;
+    this.dy = -0.1;
+    this.ball = new Ball(this.ctx, 200, 300);
+
+    this.draw = this.draw.bind(this);
+    setInterval(this.draw, 1);
   }
 
-  draw(ctx) {
-    new Ball().draw(this.ctx)
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ball.draw();
+    this.ball.x += this.dx;
+    this.ball.y += this.dy;
   }
 }
 

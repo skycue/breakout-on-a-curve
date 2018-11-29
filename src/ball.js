@@ -1,13 +1,16 @@
 class Ball {
-  constructor(options) {
+  constructor(ctx, xPos, yPos) {
+    this.ctx = ctx;
+    this.x = xPos;
+    this.y = yPos;
   }
 
-  draw(ctx) {
-    ctx.beginPath();
-    ctx.arc(200, 300, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.closePath();
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+    this.ctx.fillStyle = "green";
+    this.ctx.fill();
+    this.ctx.closePath();
   }
 }
 

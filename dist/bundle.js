@@ -86,6 +86,32 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/ball.js":
+/*!*********************!*\
+  !*** ./src/ball.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Ball {
+  constructor(options) {
+    this.draw(options.ctx);
+  }
+
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(200, 300, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "green";
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+module.exports = Ball;
+
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -94,12 +120,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const MovingObject = __webpack_require__(/*! ./moving_object */ "./src/moving_object.js");
+const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvasEl = document.getElementById("myCanvas");
   const ctx = canvasEl.getContext("2d");
   console.log("Webpack is working!");
-  new MovingObject({ctx});
+  new Ball({ctx});
 });
 
 

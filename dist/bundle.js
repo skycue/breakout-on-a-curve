@@ -142,11 +142,13 @@ class GameScreen {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ball.draw();
 
-    if (this.ball.y + this.dy < 0 || this.ball.y + this.dy > this.canvas.height) {
+    if (this.ball.y + this.dy < this.ballRadius ||
+      this.ball.y + this.dy > this.canvas.height - this.ballRadius) {
       this.dy = -this.dy;
     }
 
-    if (this.ball.x + this.dx < 0 || this.ball.x + this.dx > this.canvas.width) {
+    if (this.ball.x + this.dx < this.ballRadius ||
+      this.ball.x + this.dx > this.canvas.width - this.ballRadius) {
       this.dx = -this.dx;
     }
 

@@ -13,10 +13,36 @@ class GameScreen {
     this.ball = new Ball(this.ctx, 200, 300, this.ballRadius);
 
     //Information for paddle
-    this.paddle = new Paddle(canvas, ctx);
+    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
 
     this.draw = this.draw.bind(this);
+
+    this.rightKeyDown = false; // Will this variable be available outside of the constructor?
+    this.leftKeyDown = false; // Nope
+
+    // document.addEventListener("keydown", this.keyDownEventHandler, false); // Should this be before setInterval?
+    // document.addEventListener("keyup", this.keyUpEventHandler, false);
+
     setInterval(this.draw, 1);
+  }
+
+  keyDownEventHandler(e) {
+    debugger
+    if (e.keyCode === 39) {
+      debugger
+      this.rightKeyDown = true;
+    } else if (e.keyCode === 37) {
+      this.leftKeyDown = true;
+    }
+  }
+
+  keyUpEventHandler(e) {
+    debugger
+    if (e.keyCode === 39) {
+      this.rightKeyDown = false;
+    } else if (e.keyCode === 37) {
+      this.leftKeyDown = false;
+    }
   }
 
   draw() {
@@ -26,7 +52,10 @@ class GameScreen {
     this.ball.draw();
 
     // Draw paddle
-    // this.paddle.draw();
+    this.paddle.draw();
+
+    document.addEventListener("keydown", this.keyDownEventHandler, false);
+    document.addEventListener("keyup", this.keyUpEventHandler, false);
 
     if (this.ball.y + this.dy < this.ballRadius ||
       this.ball.y + this.dy > this.canvas.height - this.ballRadius) {
@@ -38,13 +67,20 @@ class GameScreen {
       this.dx = -this.dx;
     }
 
+    if (this.rightKeyDown) {
+      debugger
+      this.paddle.x += 8;
+    } else if (this.leftKeyDown) {
+      debugger
+      this.paddle.x -= 8;
+    }
+
 
     this.ball.x += this.dx;
     this.ball.y += this.dy;
 
     // Draw paddle
     this.paddle.draw();
-    debugger
   }
 }
 

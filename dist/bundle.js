@@ -139,13 +139,15 @@ class GameScreen {
     //Information for paddle
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
 
-    this.draw = this.draw.bind(this);
-
     this.rightKeyDown = false; // Will this variable be available outside of the constructor?
     this.leftKeyDown = false; // Nope
 
     // document.addEventListener("keydown", this.keyDownEventHandler, false); // Should this be before setInterval?
     // document.addEventListener("keyup", this.keyUpEventHandler, false);
+
+    this.draw = this.draw.bind(this);
+    this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
+    this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
 
     setInterval(this.draw, 1);
   }
@@ -191,12 +193,12 @@ class GameScreen {
       this.dx = -this.dx;
     }
 
-    if (this.rightKeyDown) {
+    if (this.rightKeyDown && this.paddle.x + 50 + 0.5 <= this.canvas.width) {
       debugger
-      this.paddle.x += 8;
-    } else if (this.leftKeyDown) {
+      this.paddle.x += 1;
+    } else if (this.leftKeyDown && this.paddle.x - 50 - 0.5 >= 0) {
       debugger
-      this.paddle.x -= 8;
+      this.paddle.x -= 1;
     }
 
 

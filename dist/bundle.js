@@ -142,6 +142,7 @@ module.exports = Ball;
 
 const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
 const Paddle = __webpack_require__(/*! ./paddle */ "./src/paddle.js");
+const Util = __webpack_require__(/*! ./util */ "./src/util.js");
 
 class GameScreen {
   constructor(canvas, ctx) {
@@ -153,7 +154,8 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
 
     //Information for paddle
-    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
+    this.paddleRadius = 50;
+    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius);
 
     this.rightKeyDown = false; // Will this variable be available outside of the constructor?
     this.leftKeyDown = false; // Nope
@@ -195,8 +197,24 @@ class GameScreen {
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
+    // if (this.ballCollidedPaddle()) {
+    //
+    // }
+
     this.ball.move();
     this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+  }
+
+  ballCollidedPaddle() {
+    const ball = this.ball;
+    const paddle = this.paddle;
+    const canvas = this.canvas;
+
+    if (Util.distance([ball.x, ball.y], [paddle.x, canvas.height]) <= ball.radius + paddle.radius) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -232,15 +250,16 @@ document.addEventListener("DOMContentLoaded", () => {
 /***/ (function(module, exports) {
 
 class Paddle {
-  constructor(canvas, ctx, xPos) {
+  constructor(canvas, ctx, xPos, paddleRadius) {
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = xPos;
+    this.radius = paddleRadius;
   }
 
   draw() {
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.canvas.height, 50, Math.PI, 2 * Math.PI);
+    this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
     this.ctx.closePath();
     this.ctx.fillStyle = "pink";
     this.ctx.fill();
@@ -258,6 +277,30 @@ class Paddle {
 }
 
 module.exports = Paddle;
+
+
+/***/ }),
+
+/***/ "./src/util.js":
+/*!*********************!*\
+  !*** ./src/util.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const Util = {
+  distance: function(pos1, pos2) {
+    const [x1, y1] = pos1;
+    const [x2, y2] = pos2;
+
+    const dx = Math.abs(x1 - x2);
+    const dy = Math.abs(y1 - y2);
+
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  }
+}
+
+module.exports = Util;
 
 
 /***/ })

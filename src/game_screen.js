@@ -1,5 +1,6 @@
 const Ball = require("./ball");
 const Paddle = require("./paddle");
+const Util = require("./util");
 
 class GameScreen {
   constructor(canvas, ctx) {
@@ -11,7 +12,8 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
 
     //Information for paddle
-    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
+    this.paddleRadius = 50;
+    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius);
 
     this.rightKeyDown = false; // Will this variable be available outside of the constructor?
     this.leftKeyDown = false; // Nope
@@ -53,8 +55,24 @@ class GameScreen {
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
+    // if (this.ballCollidedPaddle()) {
+    //
+    // }
+
     this.ball.move();
     this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+  }
+
+  ballCollidedPaddle() {
+    const ball = this.ball;
+    const paddle = this.paddle;
+    const canvas = this.canvas;
+
+    if (Util.distance([ball.x, ball.y], [paddle.x, canvas.height]) <= ball.radius + paddle.radius) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

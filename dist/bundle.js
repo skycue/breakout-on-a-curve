@@ -94,11 +94,14 @@
 /***/ (function(module, exports) {
 
 class Ball {
-  constructor(ctx, xPos, yPos, radius) {
+  constructor(canvas, ctx, xPos, yPos, radius) {
+    this.canvas = canvas;
     this.ctx = ctx;
     this.x = xPos;
     this.y = yPos;
     this.radius = radius;
+    this.dx = 0.2;
+    this.dy = -0.2;
   }
 
   draw() {
@@ -107,6 +110,21 @@ class Ball {
     this.ctx.fillStyle = "green";
     this.ctx.fill();
     this.ctx.closePath();
+  }
+
+  move() {
+    if (this.y + this.dy < this.radius ||
+      this.y + this.dy > this.canvas.height - this.radius) {
+      this.dy = -this.dy;
+    }
+
+    if (this.x + this.dx < this.radius ||
+      this.x + this.dx > this.canvas.width - this.radius) {
+      this.dx = -this.dx;
+    }
+
+    this.x += this.dx;
+    this.y += this.dy;
   }
 }
 
@@ -131,10 +149,8 @@ class GameScreen {
     this.canvas = canvas;
 
     // Information for ball
-    this.dx = 0.2;
-    this.dy = -0.2;
     this.ballRadius = 10;
-    this.ball = new Ball(this.ctx, 200, 300, this.ballRadius);
+    this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
 
     //Information for paddle
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
@@ -153,9 +169,7 @@ class GameScreen {
   }
 
   keyDownEventHandler(e) {
-    debugger
     if (e.keyCode === 39) {
-      debugger
       this.rightKeyDown = true;
     } else if (e.keyCode === 37) {
       this.leftKeyDown = true;
@@ -163,7 +177,6 @@ class GameScreen {
   }
 
   keyUpEventHandler(e) {
-    debugger
     if (e.keyCode === 39) {
       this.rightKeyDown = false;
     } else if (e.keyCode === 37) {
@@ -176,37 +189,14 @@ class GameScreen {
 
     // Draw ball
     this.ball.draw();
-
     // Draw paddle
     this.paddle.draw();
 
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
-    if (this.ball.y + this.dy < this.ballRadius ||
-      this.ball.y + this.dy > this.canvas.height - this.ballRadius) {
-      this.dy = -this.dy;
-    }
-
-    if (this.ball.x + this.dx < this.ballRadius ||
-      this.ball.x + this.dx > this.canvas.width - this.ballRadius) {
-      this.dx = -this.dx;
-    }
-
-    if (this.rightKeyDown && this.paddle.x + 50 + 0.5 <= this.canvas.width) {
-      debugger
-      this.paddle.x += 1;
-    } else if (this.leftKeyDown && this.paddle.x - 50 - 0.5 >= 0) {
-      debugger
-      this.paddle.x -= 1;
-    }
-
-
-    this.ball.x += this.dx;
-    this.ball.y += this.dy;
-
-    // Draw paddle
-    this.paddle.draw();
+    this.ball.move();
+    this.paddle.move(this.leftKeyDown, this.rightKeyDown);
   }
 }
 
@@ -256,6 +246,14 @@ class Paddle {
     this.ctx.fill();
     this.ctx.strokeStyle = "blue";
     this.ctx.stroke();
+  }
+
+  move(leftKeyDown, rightKeyDown) {
+    if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
+      this.x += 1;
+    } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
+      this.x -= 1;
+    }
   }
 }
 

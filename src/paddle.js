@@ -14,6 +14,14 @@ class Paddle {
     this.ctx.strokeStyle = "blue";
     this.ctx.stroke();
   }
+
+  move(leftKeyDown, rightKeyDown) {
+    if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
+      this.x += 1;
+    } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
+      this.x -= 1;
+    }
+  }
 }
 
 module.exports = Paddle;

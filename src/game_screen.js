@@ -7,10 +7,8 @@ class GameScreen {
     this.canvas = canvas;
 
     // Information for ball
-    this.dx = 0.2;
-    this.dy = -0.2;
     this.ballRadius = 10;
-    this.ball = new Ball(this.ctx, 200, 300, this.ballRadius);
+    this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
 
     //Information for paddle
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2);
@@ -29,9 +27,7 @@ class GameScreen {
   }
 
   keyDownEventHandler(e) {
-    debugger
     if (e.keyCode === 39) {
-      debugger
       this.rightKeyDown = true;
     } else if (e.keyCode === 37) {
       this.leftKeyDown = true;
@@ -39,7 +35,6 @@ class GameScreen {
   }
 
   keyUpEventHandler(e) {
-    debugger
     if (e.keyCode === 39) {
       this.rightKeyDown = false;
     } else if (e.keyCode === 37) {
@@ -52,37 +47,14 @@ class GameScreen {
 
     // Draw ball
     this.ball.draw();
-
     // Draw paddle
     this.paddle.draw();
 
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
-    if (this.ball.y + this.dy < this.ballRadius ||
-      this.ball.y + this.dy > this.canvas.height - this.ballRadius) {
-      this.dy = -this.dy;
-    }
-
-    if (this.ball.x + this.dx < this.ballRadius ||
-      this.ball.x + this.dx > this.canvas.width - this.ballRadius) {
-      this.dx = -this.dx;
-    }
-
-    if (this.rightKeyDown && this.paddle.x + 50 + 0.5 <= this.canvas.width) {
-      debugger
-      this.paddle.x += 1;
-    } else if (this.leftKeyDown && this.paddle.x - 50 - 0.5 >= 0) {
-      debugger
-      this.paddle.x -= 1;
-    }
-
-
-    this.ball.x += this.dx;
-    this.ball.y += this.dy;
-
-    // Draw paddle
-    this.paddle.draw();
+    this.ball.move();
+    this.paddle.move(this.leftKeyDown, this.rightKeyDown);
   }
 }
 

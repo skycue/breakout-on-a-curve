@@ -55,20 +55,12 @@ class GameScreen {
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
-    // if (this.ballCollidedPaddle()) {
-    //
-    // }
-
     this.ball.move();
     this.paddle.move(this.leftKeyDown, this.rightKeyDown);
   }
 
-  ballCollidedPaddle() {
-    const ball = this.ball;
-    const paddle = this.paddle;
-    const canvas = this.canvas;
-
-    if (Util.distance([ball.x, ball.y], [paddle.x, canvas.height]) <= ball.radius + paddle.radius) {
+  ballCollidedPaddle(ball, paddle) {
+    if (Util.distance([ball.x, ball.y], [paddle.x, this.canvas.height]) <= ball.radius + paddle.radius) {
       return true;
     } else {
       return false;

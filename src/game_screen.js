@@ -1,6 +1,7 @@
 const Ball = require("./ball");
 const Paddle = require("./paddle");
 const Util = require("./util");
+const Brick = require("./brick");
 
 class GameScreen {
   constructor(canvas, ctx) {
@@ -10,6 +11,9 @@ class GameScreen {
     // Information for ball
     this.ballRadius = 10;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
+
+    // Information for bricks
+    this.bricks = this.populateBricks(4, 5);
 
     //Information for paddle
     this.paddleRadius = 50;
@@ -52,6 +56,11 @@ class GameScreen {
     // Draw paddle
     this.paddle.draw();
 
+    // Draw bricks
+    this.bricks.forEach(row => {
+      row.forEach(brick => brick.draw());
+    })
+
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
@@ -65,6 +74,19 @@ class GameScreen {
     } else {
       return false;
     }
+  }
+
+  populateBricks(numRows, numCols) {
+    const bricks = [];
+
+    for (let i = 0; i < numRows; i++) {
+      const row = [];
+      for (let j = 0; j < numCols; j++) {
+        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), i * (this.canvas.height / 3.5 / numRows)], this.canvas.width / numCols, this.canvas.height / 3.5 / numRows));
+      }
+      bricks.push(row);
+    }
+    return bricks;
   }
 }
 

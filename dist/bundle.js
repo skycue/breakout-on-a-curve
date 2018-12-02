@@ -133,6 +133,37 @@ module.exports = Ball;
 
 /***/ }),
 
+/***/ "./src/brick.js":
+/*!**********************!*\
+  !*** ./src/brick.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Brick {
+  constructor(ctx, pos, width, height) {
+    this.ctx = ctx;
+    this.pos = pos;
+    this.width = width;
+    this.height = height;
+  }
+
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
+    this.ctx.closePath();
+    this.ctx.fillStyle = "orange";
+    this.ctx.fill();
+    this.ctx.strokeStyle = "purple";
+    this.ctx.stroke();
+  }
+}
+
+module.exports = Brick;
+
+
+/***/ }),
+
 /***/ "./src/game_screen.js":
 /*!****************************!*\
   !*** ./src/game_screen.js ***!
@@ -143,6 +174,7 @@ module.exports = Ball;
 const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
 const Paddle = __webpack_require__(/*! ./paddle */ "./src/paddle.js");
 const Util = __webpack_require__(/*! ./util */ "./src/util.js");
+const Brick = __webpack_require__(/*! ./brick */ "./src/brick.js");
 
 class GameScreen {
   constructor(canvas, ctx) {
@@ -152,6 +184,9 @@ class GameScreen {
     // Information for ball
     this.ballRadius = 10;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
+
+    // Information for bricks
+    this.bricks = this.populateBricks(4, 5);
 
     //Information for paddle
     this.paddleRadius = 50;
@@ -194,6 +229,11 @@ class GameScreen {
     // Draw paddle
     this.paddle.draw();
 
+    // Draw bricks
+    this.bricks.forEach(row => {
+      row.forEach(brick => brick.draw());
+    })
+
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
@@ -207,6 +247,19 @@ class GameScreen {
     } else {
       return false;
     }
+  }
+
+  populateBricks(numRows, numCols) {
+    const bricks = [];
+
+    for (let i = 0; i < numRows; i++) {
+      const row = [];
+      for (let j = 0; j < numCols; j++) {
+        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), i * (this.canvas.height / 3.5 / numRows)], this.canvas.width / numCols, this.canvas.height / 3.5 / numRows));
+      }
+      bricks.push(row);
+    }
+    return bricks;
   }
 }
 

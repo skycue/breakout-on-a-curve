@@ -3,14 +3,18 @@ class Brick {
     this.ctx = ctx;
     this.pos = pos;
     this.width = width;
-    this.heigh = height;
+    this.height = height;
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
-    this.ctx.fillStyle = "#0095DD";
-    this.ctx.fill();
     this.ctx.closePath();
+    this.ctx.fillStyle = "orange";
+    this.ctx.fill();
+    this.ctx.strokeStyle = "purple";
+    this.ctx.stroke();
   }
 }
+
+module.exports = Brick;

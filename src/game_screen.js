@@ -61,6 +61,8 @@ class GameScreen {
       row.forEach(brick => brick.draw());
     })
 
+    this.ballCollidedBrick(this.ball, this.bricks);
+
     document.addEventListener("keydown", this.keyDownEventHandler, false);
     document.addEventListener("keyup", this.keyUpEventHandler, false);
 
@@ -74,6 +76,28 @@ class GameScreen {
     } else {
       return false;
     }
+  }
+
+  ballCollidedBrick(ball, bricks) {
+    const ballPos = [ball.x, ball.y];
+
+    bricks.forEach(row => {
+      row.forEach(brick => {
+        const brickPos = brick.pos;
+        const ballInXRange = ballPos[0] > brickPos[0] && ballPos[0] < brickPos[0] + brick.width;
+        const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height;
+
+        if (ballInXRange && ballTouchBrickBottom) {
+          console.log(bricks.indexOf(row));
+          console.log(row.indexOf(brick));
+          debugger
+          return true;
+        }
+
+      })
+    })
+
+    return false;
   }
 
   populateBricks(numRows, numCols) {

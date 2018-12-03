@@ -9,8 +9,8 @@ class GameScreen {
     this.canvas = canvas;
 
     // Information for ball
-    this.ballRadius = 10;
-    this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius);
+    this.ballRadius = 20;
+    this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
     this.bricks = this.populateBricks(4, 5);
@@ -61,6 +61,11 @@ class GameScreen {
     const ballBrickCollision = this.ballCollidedBrick(this.ball, this.bricks);
 
     if (ballBrickCollision.collided) {
+      let newBallColor = this.getRandomColor();
+      while (newBallColor === this.ball.color) {
+        newBallColor = this.getRandomColor();
+      }
+      this.ball.color = newBallColor;
       this.ball.dy = -1 * this.ball.dy;
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
     }
@@ -115,6 +120,17 @@ class GameScreen {
       bricks.push(row);
     }
     return bricks;
+  }
+
+  getRandomColor() {
+    const letters = "0123456789ABCDEF";
+
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
   }
 }
 

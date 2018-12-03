@@ -19,11 +19,8 @@ class GameScreen {
     this.paddleRadius = 50;
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius);
 
-    this.rightKeyDown = false; // Will this variable be available outside of the constructor?
-    this.leftKeyDown = false; // Nope
-
-    // document.addEventListener("keydown", this.keyDownEventHandler, false); // Should this be before setInterval?
-    // document.addEventListener("keyup", this.keyUpEventHandler, false);
+    this.rightKeyDown = false;
+    this.leftKeyDown = false;
 
     this.draw = this.draw.bind(this);
     this.keyDownEventHandler = this.keyDownEventHandler.bind(this);

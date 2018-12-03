@@ -1,18 +1,19 @@
 class Ball {
-  constructor(canvas, ctx, xPos, yPos, radius) {
+  constructor(canvas, ctx, xPos, yPos, radius, color) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.x = xPos;
     this.y = yPos;
     this.radius = radius;
-    this.dx = 0.2;
-    this.dy = -0.2;
+    this.dx = 1.2;
+    this.dy = -1.2;
+    this.color = color;
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = "green";
+    this.ctx.fillStyle = this.color;
     this.ctx.fill();
     this.ctx.closePath();
   }

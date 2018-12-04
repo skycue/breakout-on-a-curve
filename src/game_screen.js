@@ -9,7 +9,7 @@ class GameScreen {
     this.canvas = canvas;
 
     // Information for ball
-    this.ballRadius = 20;
+    this.ballRadius = 30;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
@@ -66,7 +66,13 @@ class GameScreen {
         newBallColor = this.getRandomColor();
       }
       this.ball.color = newBallColor;
-      this.ball.dy = -1 * this.ball.dy;
+
+      if (ballBrickCollision.collidedBottom) {
+        this.ball.dy = -1 * this.ball.dy;
+      } else if (ballBrickCollision.collidedSide) {
+        this.ball.dx = -1 * this.ball.dx;
+      }
+      debugger
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
     }
 
@@ -86,7 +92,9 @@ class GameScreen {
   }
 
   ballCollidedBrick(ball, bricks) {
+
     const ballPos = [ball.x, ball.y];
+    console.log(ballPos);
 
     for (let row = 0; row < bricks.length; row++) {
       for (let col = 0; col < bricks[row].length; col++) {
@@ -97,11 +105,21 @@ class GameScreen {
         }
 
         const brickPos = brick.pos;
+
         const ballInXRange = ballPos[0] > brickPos[0] && ballPos[0] < brickPos[0] + brick.width;
+        const ballInYRange = ballPos[1] > brickPos[1] && ballPos[1] < brickPos[1] + brick.height;
         const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height;
 
+        const ballTouchBrickLeft = ballPos[0] < brickPos[0] && ballPos[0] + ball.radius >= brickPos[0];
+        const ballTouchBrickRight = ballPos[0] > brickPos[0] && ballPos[0] - ball.radius <= brickPos[0] + brick.width;
+
+        const a = ballInYRange && ballTouchBrickLeft;
+        const b = ballInYRange && ballTouchBrickRight;
+        // Case 1: Ball touches bottom of brick
         if (ballInXRange && ballTouchBrickBottom) {
-          return {collided: true, pos: [row, col]};
+          return {collided: true, pos: [row, col], collidedBottom: true};
+        } else if ((a) || (b)) {
+          return {collided: true, pos: [row, col], collidedSide: true};
         }
       }
     }

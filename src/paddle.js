@@ -1,20 +1,21 @@
 class Paddle {
-  constructor(canvas, ctx, xPos, paddleRadius) {
+  constructor(canvas, ctx, xPos, paddleRadius, color) {
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = xPos;
     this.y = canvas.height;
     this.radius = paddleRadius;
+    this.color = color;
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
     this.ctx.closePath();
-    this.ctx.fillStyle = "pink";
+    this.ctx.fillStyle = this.color;
     this.ctx.fill();
-    this.ctx.strokeStyle = "blue";
-    this.ctx.stroke();
+    // this.ctx.strokeStyle = "blue";
+    // this.ctx.stroke();
   }
 
   move(leftKeyDown, rightKeyDown) {

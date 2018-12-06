@@ -3,6 +3,7 @@ class Paddle {
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = xPos;
+    this.y = canvas.height;
     this.radius = paddleRadius;
   }
 
@@ -18,9 +19,9 @@ class Paddle {
 
   move(leftKeyDown, rightKeyDown) {
     if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
-      this.x += 1;
+      this.x += 2;
     } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
-      this.x -= 1;
+      this.x -= 2;
     }
   }
 }

@@ -9,11 +9,11 @@ class GameScreen {
     this.canvas = canvas;
 
     // Information for ball
-    this.ballRadius = 30;
+    this.ballRadius = 20;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(4, 5);
+    this.bricks = this.populateBricks(3, 6);
 
     //Information for paddle
     this.paddleRadius = 50;
@@ -23,10 +23,11 @@ class GameScreen {
     this.leftKeyDown = false;
 
     this.draw = this.draw.bind(this);
-    this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
-    this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
+    // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
+    // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
+    this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
 
-    setInterval(this.draw, 1);
+    this.draw();
   }
 
   keyDownEventHandler(e) {
@@ -42,6 +43,13 @@ class GameScreen {
       this.rightKeyDown = false;
     } else if (e.keyCode === 37) {
       this.leftKeyDown = false;
+    }
+  }
+
+  mouseMoveHandler(e) {
+    const relativeX = e.clientX;
+    if (relativeX - this.paddle.radius > 0 && relativeX + this.paddle.radius < this.canvas.width) {
+        this.paddle.x = relativeX;
     }
   }
 
@@ -72,15 +80,16 @@ class GameScreen {
       } else if (ballBrickCollision.collidedSide) {
         this.ball.dx = -1 * this.ball.dx;
       }
-      debugger
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
     }
 
-    document.addEventListener("keydown", this.keyDownEventHandler, false);
-    document.addEventListener("keyup", this.keyUpEventHandler, false);
+    // document.addEventListener("keydown", this.keyDownEventHandler, false);
+    // document.addEventListener("keyup", this.keyUpEventHandler, false);
+    document.addEventListener("mousemove", this.mouseMoveHandler, false);
 
     this.ball.move();
-    this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+    //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+    requestAnimationFrame(this.draw);
   }
 
   ballCollidedPaddle(ball, paddle) {
@@ -94,7 +103,6 @@ class GameScreen {
   ballCollidedBrick(ball, bricks) {
 
     const ballPos = [ball.x, ball.y];
-    console.log(ballPos);
 
     for (let row = 0; row < bricks.length; row++) {
       for (let col = 0; col < bricks[row].length; col++) {

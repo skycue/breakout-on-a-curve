@@ -8,6 +8,9 @@ class GameScreen {
     this.ctx = ctx;
     this.canvas = canvas;
 
+    //Score Information
+    this.score = 0;
+
     // Information for ball
     this.ballRadius = 20;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
@@ -17,7 +20,7 @@ class GameScreen {
 
     //Information for paddle
     this.paddleRadius = 50;
-    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius);
+    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius, this.getRandomColor());
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -53,13 +56,23 @@ class GameScreen {
     }
   }
 
+  drawScore(ctx, score) {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: " + score, 8, 400);
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Draw ball
-    this.ball.draw();
     // Draw paddle
     this.paddle.draw();
+
+    // Draw ball
+    this.ball.draw();
+
+    //Draw score
+    this.drawScore(this.ctx, this.score);
 
     // Draw bricks
     this.bricks.forEach(row => {
@@ -81,6 +94,8 @@ class GameScreen {
         this.ball.dx = -1 * this.ball.dx;
       }
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
+
+      this.score++;
     }
 
     // document.addEventListener("keydown", this.keyDownEventHandler, false);

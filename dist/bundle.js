@@ -185,6 +185,9 @@ class GameScreen {
     this.ctx = ctx;
     this.canvas = canvas;
 
+    //Score Information
+    this.score = 0;
+
     // Information for ball
     this.ballRadius = 20;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
@@ -194,7 +197,7 @@ class GameScreen {
 
     //Information for paddle
     this.paddleRadius = 50;
-    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius);
+    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius, this.getRandomColor());
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -230,13 +233,23 @@ class GameScreen {
     }
   }
 
+  drawScore(ctx, score) {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: " + score, 8, 400);
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Draw ball
-    this.ball.draw();
     // Draw paddle
     this.paddle.draw();
+
+    // Draw ball
+    this.ball.draw();
+
+    //Draw score
+    this.drawScore(this.ctx, this.score);
 
     // Draw bricks
     this.bricks.forEach(row => {
@@ -258,6 +271,8 @@ class GameScreen {
         this.ball.dx = -1 * this.ball.dx;
       }
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
+
+      this.score++;
     }
 
     // document.addEventListener("keydown", this.keyDownEventHandler, false);
@@ -369,22 +384,23 @@ document.addEventListener("DOMContentLoaded", () => {
 /***/ (function(module, exports) {
 
 class Paddle {
-  constructor(canvas, ctx, xPos, paddleRadius) {
+  constructor(canvas, ctx, xPos, paddleRadius, color) {
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = xPos;
     this.y = canvas.height;
     this.radius = paddleRadius;
+    this.color = color;
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
     this.ctx.closePath();
-    this.ctx.fillStyle = "pink";
+    this.ctx.fillStyle = this.color;
     this.ctx.fill();
-    this.ctx.strokeStyle = "blue";
-    this.ctx.stroke();
+    // this.ctx.strokeStyle = "blue";
+    // this.ctx.stroke();
   }
 
   move(leftKeyDown, rightKeyDown) {

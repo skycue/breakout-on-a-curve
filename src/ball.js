@@ -5,8 +5,8 @@ class Ball {
     this.x = xPos;
     this.y = yPos;
     this.radius = radius;
-    this.dx = 1.2;
-    this.dy = -1.2;
+    this.dx = 6;
+    this.dy = -6;
     this.color = color;
   }
 

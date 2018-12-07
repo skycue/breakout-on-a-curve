@@ -13,11 +13,11 @@ class GameScreen {
     this.score = 0;
 
     // Information for ball
-    this.ballRadius = 20;
+    this.ballRadius = 10;
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(2, 4);
+    this.bricks = this.populateBricks(8, 8);
 
     //Information for paddle
     this.paddleRadius = 90;
@@ -54,6 +54,7 @@ class GameScreen {
     const relativeX = e.clientX;
     if (relativeX - this.paddle.radius > 0 && relativeX + this.paddle.radius < this.canvas.width) {
         this.paddle.x = relativeX;
+        // this.paddleCollision(this.ball, this.paddle, this.ctx);
     }
   }
 
@@ -116,8 +117,8 @@ class GameScreen {
     if (ball.y + ball.dy > canvas.height - ball.radius) {
       ball.dy = -ball.dy;
       ball.y += ball.dy;
-      // alert("GAME OVER");
-      // document.location.reload();
+      alert("GAME OVER");
+      document.location.reload();
       this.collidedPaddle = false;
     }
 
@@ -183,21 +184,51 @@ class GameScreen {
     return {collided: false};
   }
 
+  dyRequirePositive(ball, originalY, dyNew) {
+    while (dyNew + ball.y >= originalY) {
+      if (dyNew > 0) {
+        dyNew *= -1;
+      }
+
+      // dyNew -= dyNew;
+      // if (dyNew === 0) {
+      //   console.warn('0 case');
+      //   dyNew -= 6;
+      // }
+      // console.warn('Original Y Value: ' + originalY);
+      // console.warn('New Y Value: ' + (dyNew + ball.y));
+    }
+
+    return dyNew;
+  }
+
   paddleCollision(ball, paddle, ctx) {
-    // if (this.collidedPaddle) {
-    //   this.collidedPaddle = false;
-    //   return false;
-    // }
+
     const nextX = ball.x + ball.dx;
     const nextY = ball.y + ball.dy;
     const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
 
     if (dist <= ball.radius + paddle.radius) {
-      const shouldDetectDoubleCollitions = true;
-      if (shouldDetectDoubleCollitions && this.collidedPaddle) {
-        console.error('Ignoring');
+      if (this.collidedPaddle) {
+        // console.error('Ignoring');
+        // console.error('y');
+        // console.log(ball.y);
+        // console.error('x');
+        // console.log(ball.x);
         return;
+      } else {
+        // console.error('1st collision');
+        // console.error('initial y');
+        // console.error(ball.y);
+        // console.error('initial x');
+        // console.error(ball.x);
+        // console.error('initial dy');
+        // console.error(ball.dy);
+        // console.error('initial dx');
+        // console.error(ball.dx);
       }
+
+      const originalY = ball.y;
 
       const distX = ball.x - paddle.x;
       const distY = ball.y - paddle.y;
@@ -214,40 +245,28 @@ class GameScreen {
       dxNew = dxNew / ratio;
       dyNew = dyNew / ratio;
 
-      // console.log(`previous y: ${ball.dy}`);
-      // console.log(`previous x: ${ball.dx}`);
-      // console.log(`new y: ${dyNew}`);
-      // console.log(`new x: ${dxNew}`);
-      // console.log(`HYPO: ${Util.hypotenuse(dxNew, dyNew)}`);
+      dyNew = this.dyRequirePositive(ball, originalY, dyNew);
 
       ball.dx = dxNew;
       ball.dy = dyNew;
-      // console.log("old");
-      // console.log(ball.x);
-      // console.log(ball.y);
 
       ball.x += ball.dx;
       ball.y += ball.dy;
-      // console.log("new");
-      // console.log(ball.x);
+
+      // console.log("hit");
+      // console.log('dy after');
+      // console.log(ball.dy);
+      // console.log('dx after');
+      // console.log(ball.dx);
+      // console.log('y after');
       // console.log(ball.y);
-      console.log("hit");
-      console.log(ball.dx);
-      console.log(ball.dy);
-      // debugger
-      // ctx.beginPath();
-      // ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-      // ctx.closePath();
-      // ctx.fillStyle = ball.color;
-      // ctx.fill();
+      // console.log('x after');
+      // console.log(ball.x);
 
       paddle.color = this.getRandomColor();
       this.collidedPaddle = true;
-      return true;
     }
-    // this.collidedPaddle = false;
     this.collidedPaddle = false;
-    return false;
   }
 
   populateBricks(numRows, numCols) {

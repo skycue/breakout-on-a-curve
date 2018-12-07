@@ -30,8 +30,6 @@ class GameScreen {
     // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
     // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
-
-    // this.draw();
   }
 
   keyDownEventHandler(e) {
@@ -114,31 +112,27 @@ class GameScreen {
   }
 
   wallCollision(ball, canvas) {
-    if (ball.y + ball.dy > canvas.height - ball.radius) {
-      ball.dy = -ball.dy;
-      ball.y += ball.dy;
+    const topWallCollide = ball.y + ball.dy <= ball.radius;
+    const bottomWallCollide = ball.y + ball.dy > canvas.height - ball.radius;
+    const leftWallCollide = ball.x + ball.dx <= ball.radius;
+    const rightWallCollide = ball.x + ball.dx > canvas.width - ball.radius;
+
+    if (bottomWallCollide) {
       alert("GAME OVER");
       document.location.reload();
+    } else {
+      if (topWallCollide) {
+        ball.dy = -ball.dy;
+        ball.y += ball.dy;
+      }
+
+      if (leftWallCollide || rightWallCollide) {
+        ball.dx = -ball.dx;
+        ball.x += ball.dx;
+      }
+
       this.collidedPaddle = false;
     }
-
-    if (ball.y + ball.dy <= ball.radius) {
-      // debugger
-      ball.dy = -ball.dy;
-      ball.y += ball.dy;
-      // ball.draw();
-      this.collidedPaddle = false;
-    }
-
-    if (ball.x + ball.dx <= ball.radius ||
-      ball.x + ball.dx > canvas.width - ball.radius) {
-      ball.dx = -ball.dx;
-      ball.x += ball.dx;
-      // ball.draw();
-      this.collidedPaddle = false;
-    }
-
-
   }
 
   ballCollidedPaddle(ball, paddle) {

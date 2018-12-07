@@ -135,14 +135,6 @@ class GameScreen {
     }
   }
 
-  ballCollidedPaddle(ball, paddle) {
-    if (Util.distance([ball.x, ball.y], [paddle.x, this.canvas.height]) <= ball.radius + paddle.radius) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   ballCollidedBrick(ball, bricks) {
 
     const ballPos = [ball.x, ball.y];

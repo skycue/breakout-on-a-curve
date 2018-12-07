@@ -11,11 +11,12 @@ class Brick {
     if (this.visible) {
       this.ctx.beginPath();
       this.ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
-      this.ctx.closePath();
+      // this.ctx.closePath();
       this.ctx.fillStyle = "orange";
       this.ctx.fill();
       this.ctx.strokeStyle = "purple";
       this.ctx.stroke();
+      this.ctx.closePath();
     }
   }
 }

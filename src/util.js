@@ -7,6 +7,10 @@ const Util = {
     const dy = Math.abs(y1 - y2);
 
     return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  },
+
+  hypotenuse: function(a, b) {
+    return Math.sqrt(Math.abs(a * a) + Math.abs(b * b));
   }
 }
 

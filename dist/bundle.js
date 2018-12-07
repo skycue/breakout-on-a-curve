@@ -114,15 +114,18 @@ class Ball {
   }
 
   move() {
-    if (this.y + this.dy < this.radius ||
-      this.y + this.dy > this.canvas.height - this.radius) {
-      this.dy = -this.dy;
-    }
-
-    if (this.x + this.dx < this.radius ||
-      this.x + this.dx > this.canvas.width - this.radius) {
-      this.dx = -this.dx;
-    }
+    // if (this.y + this.dy <= this.radius ||
+    //   this.y + this.dy > this.canvas.height - this.radius) {
+    //   this.dy = -this.dy;
+    // }
+    //
+    // if (this.x + this.dx <= this.radius ||
+    //   this.x + this.dx > this.canvas.width - this.radius) {
+    //   this.dx = -this.dx;
+    // }
+    console.log("move");
+    console.log(this.dx);
+    console.log(this.dy);
 
     this.x += this.dx;
     this.y += this.dy;
@@ -154,11 +157,12 @@ class Brick {
     if (this.visible) {
       this.ctx.beginPath();
       this.ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
-      this.ctx.closePath();
+      // this.ctx.closePath();
       this.ctx.fillStyle = "orange";
       this.ctx.fill();
       this.ctx.strokeStyle = "purple";
       this.ctx.stroke();
+      this.ctx.closePath();
     }
   }
 }
@@ -193,10 +197,10 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(3, 6);
+    this.bricks = this.populateBricks(1, 1);
 
     //Information for paddle
-    this.paddleRadius = 50;
+    this.paddleRadius = 90;
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius, this.getRandomColor());
 
     this.rightKeyDown = false;
@@ -207,7 +211,7 @@ class GameScreen {
     // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
 
-    this.draw();
+    // this.draw();
   }
 
   keyDownEventHandler(e) {
@@ -234,14 +238,14 @@ class GameScreen {
   }
 
   drawScore(ctx, score) {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score: " + score, 8, 400);
+    // ctx.font = "16px Arial";
+    // ctx.fillStyle = "#0095DD";
+    // ctx.fillText("Score: " + score, 8, 400);
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+// debugger
     // Draw paddle
     this.paddle.draw();
 
@@ -275,6 +279,10 @@ class GameScreen {
       this.score++;
     }
 
+    this.paddleCollision(this.ball, this.paddle, this.ctx);
+
+    this.wallCollision(this.ball, this.canvas);
+
     // document.addEventListener("keydown", this.keyDownEventHandler, false);
     // document.addEventListener("keyup", this.keyUpEventHandler, false);
     document.addEventListener("mousemove", this.mouseMoveHandler, false);
@@ -282,6 +290,25 @@ class GameScreen {
     this.ball.move();
     //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
     requestAnimationFrame(this.draw);
+  }
+
+  wallCollision(ball, canvas) {
+    if (ball.y + ball.dy <= ball.radius ||
+      ball.y + ball.dy > canvas.height - ball.radius) {
+      // debugger
+      ball.dy = -ball.dy;
+      ball.y += ball.dy;
+      // ball.draw();
+    }
+
+    if (ball.x + ball.dx <= ball.radius ||
+      ball.x + ball.dx > canvas.width - ball.radius) {
+      ball.dx = -ball.dx;
+      ball.x += ball.dx;
+      // ball.draw();
+    }
+
+
   }
 
   ballCollidedPaddle(ball, paddle) {
@@ -327,6 +354,62 @@ class GameScreen {
     return {collided: false};
   }
 
+  paddleCollision(ball, paddle, ctx) {
+    const nextX = ball.x + ball.dx;
+    const nextY = ball.y + ball.dy;
+    const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
+
+    if (dist <= ball.radius + paddle.radius) {
+
+      const distX = ball.x - paddle.x;
+      const distY = ball.y - paddle.y;
+      const dx = ball.dx;
+      const dy = -1 * ball.dy;
+
+      let dxNew = ((-1 / Math.pow(dist, 2)) * ((Math.pow(distX, 2) - Math.pow(distY, 2)) * dx - (2 * distX * distY * dy)));
+      let dyNew = ((1 / Math.pow(dist, 2)) * ((Math.pow(distY, 2) - Math.pow(distX, 2)) * dy - (2 * distX * distY * dx)));
+
+      const hypo = Util.hypotenuse(dxNew, dyNew);
+      const wantedSpeed = Util.hypotenuse(6, 6);
+      const ratio = hypo / wantedSpeed;
+
+      dxNew = dxNew / ratio;
+      dyNew = dyNew / ratio;
+
+      // console.log(`previous y: ${ball.dy}`);
+      // console.log(`previous x: ${ball.dx}`);
+      // console.log(`new y: ${dyNew}`);
+      // console.log(`new x: ${dxNew}`);
+      // console.log(`HYPO: ${Util.hypotenuse(dxNew, dyNew)}`);
+
+      ball.dx = dxNew;
+      ball.dy = dyNew;
+      // console.log("old");
+      // console.log(ball.x);
+      // console.log(ball.y);
+
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+      // console.log("new");
+      // console.log(ball.x);
+      // console.log(ball.y);
+      console.log("hit");
+      console.log(ball.dx);
+      console.log(ball.dy);
+      // debugger
+      // ctx.beginPath();
+      // ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      // ctx.closePath();
+      // ctx.fillStyle = ball.color;
+      // ctx.fill();
+
+      paddle.color = this.getRandomColor();
+
+      return true;
+    }
+    return false;
+  }
+
   populateBricks(numRows, numCols) {
     const bricks = [];
 
@@ -370,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
   console.log("Webpack is working!");
-  new GameScreen(canvas, ctx);
+  new GameScreen(canvas, ctx).draw();
 });
 
 
@@ -396,9 +479,10 @@ class Paddle {
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
-    this.ctx.closePath();
+    // this.ctx.closePath();
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
+    this.ctx.closePath();
     // this.ctx.strokeStyle = "blue";
     // this.ctx.stroke();
   }
@@ -433,6 +517,10 @@ const Util = {
     const dy = Math.abs(y1 - y2);
 
     return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  },
+
+  hypotenuse: function(a, b) {
+    return Math.sqrt(Math.abs(a * a) + Math.abs(b * b));
   }
 }
 

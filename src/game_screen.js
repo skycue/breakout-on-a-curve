@@ -7,6 +7,7 @@ class GameScreen {
   constructor(canvas, ctx) {
     this.ctx = ctx;
     this.canvas = canvas;
+    this.collided = false;
 
     //Score Information
     this.score = 0;
@@ -16,7 +17,7 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(1, 1);
+    this.bricks = this.populateBricks(2, 4);
 
     //Information for paddle
     this.paddleRadius = 90;
@@ -64,7 +65,7 @@ class GameScreen {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-// debugger
+
     // Draw paddle
     this.paddle.draw();
 
@@ -112,8 +113,14 @@ class GameScreen {
   }
 
   wallCollision(ball, canvas) {
-    if (ball.y + ball.dy <= ball.radius ||
-      ball.y + ball.dy > canvas.height - ball.radius) {
+    if (ball.y + ball.dy > canvas.height - ball.radius) {
+      ball.dy = -ball.dy;
+      ball.y += ball.dy;
+      // alert("GAME OVER");
+      // document.location.reload();
+    }
+
+    if (ball.y + ball.dy <= ball.radius) {
       // debugger
       ball.dy = -ball.dy;
       ball.y += ball.dy;
@@ -174,6 +181,10 @@ class GameScreen {
   }
 
   paddleCollision(ball, paddle, ctx) {
+    if (this.collided) {
+      this.collided = false;
+      return false;
+    }
     const nextX = ball.x + ball.dx;
     const nextY = ball.y + ball.dy;
     const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
@@ -223,9 +234,11 @@ class GameScreen {
       // ctx.fill();
 
       paddle.color = this.getRandomColor();
-
+      this.collided = true;
       return true;
     }
+    // this.collided = false;
+    this.collided = false;
     return false;
   }
 

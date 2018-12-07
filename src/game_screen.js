@@ -12,16 +12,19 @@ class GameScreen {
     //Score Information
     this.score = 0;
 
-    // Information for ball
-    this.ballRadius = 10;
-    this.ball = new Ball(canvas, ctx, 200, 300, this.ballRadius, this.getRandomColor());
-
-    // Information for bricks
-    this.bricks = this.populateBricks(8, 8);
+    //Lives Information
+    this.lives = 3;
 
     //Information for paddle
     this.paddleRadius = 90;
     this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius, this.getRandomColor());
+
+    // Information for ball
+    this.ballRadius = 10;
+    this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
+
+    // Information for bricks
+    this.bricks = this.populateBricks(8, 9);
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -30,6 +33,7 @@ class GameScreen {
     // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
     // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    this.wallCollision = this.wallCollision.bind(this);
   }
 
   keyDownEventHandler(e) {
@@ -62,6 +66,13 @@ class GameScreen {
     ctx.fillText("Score: " + score, 8, 400);
   }
 
+  drawLives(ctx, lives) {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: " + lives, 208, 400);
+    // console.log(lives);
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -73,6 +84,9 @@ class GameScreen {
 
     //Draw score
     this.drawScore(this.ctx, this.score);
+
+    //Draw lives
+    this.drawLives(this.ctx, this.lives);
 
     // Draw bricks
     this.bricks.forEach(row => {
@@ -100,7 +114,7 @@ class GameScreen {
 
     this.paddleCollision(this.ball, this.paddle, this.ctx);
 
-    this.wallCollision(this.ball, this.canvas);
+    this.wallCollision(this.ball, this.canvas, this.paddle);
 
     // document.addEventListener("keydown", this.keyDownEventHandler, false);
     // document.addEventListener("keyup", this.keyUpEventHandler, false);
@@ -111,15 +125,26 @@ class GameScreen {
     requestAnimationFrame(this.draw);
   }
 
-  wallCollision(ball, canvas) {
+  wallCollision(ball, canvas, paddle) {
     const topWallCollide = ball.y + ball.dy <= ball.radius;
     const bottomWallCollide = ball.y + ball.dy > canvas.height - ball.radius;
     const leftWallCollide = ball.x + ball.dx <= ball.radius;
     const rightWallCollide = ball.x + ball.dx > canvas.width - ball.radius;
 
     if (bottomWallCollide) {
-      alert("GAME OVER");
-      document.location.reload();
+      if (this.lives > 0) {
+        this.lives -= 1;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height - 2 * this.paddleRadius;
+        ball.dx = 0;
+        ball.dy = 6;
+
+        paddle.x = canvas.width / 2;
+        paddle.y = canvas.height;
+      } else {
+        alert("GAME OVER");
+        document.location.reload();
+      }
     } else {
       if (topWallCollide) {
         ball.dy = -ball.dy;

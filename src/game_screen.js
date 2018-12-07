@@ -7,7 +7,7 @@ class GameScreen {
   constructor(canvas, ctx) {
     this.ctx = ctx;
     this.canvas = canvas;
-    this.collided = false;
+    this.collidedPaddle = false;
 
     //Score Information
     this.score = 0;
@@ -118,6 +118,7 @@ class GameScreen {
       ball.y += ball.dy;
       // alert("GAME OVER");
       // document.location.reload();
+      this.collidedPaddle = false;
     }
 
     if (ball.y + ball.dy <= ball.radius) {
@@ -125,6 +126,7 @@ class GameScreen {
       ball.dy = -ball.dy;
       ball.y += ball.dy;
       // ball.draw();
+      this.collidedPaddle = false;
     }
 
     if (ball.x + ball.dx <= ball.radius ||
@@ -132,6 +134,7 @@ class GameScreen {
       ball.dx = -ball.dx;
       ball.x += ball.dx;
       // ball.draw();
+      this.collidedPaddle = false;
     }
 
 
@@ -181,15 +184,20 @@ class GameScreen {
   }
 
   paddleCollision(ball, paddle, ctx) {
-    if (this.collided) {
-      this.collided = false;
-      return false;
-    }
+    // if (this.collidedPaddle) {
+    //   this.collidedPaddle = false;
+    //   return false;
+    // }
     const nextX = ball.x + ball.dx;
     const nextY = ball.y + ball.dy;
     const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
 
     if (dist <= ball.radius + paddle.radius) {
+      const shouldDetectDoubleCollitions = true;
+      if (shouldDetectDoubleCollitions && this.collidedPaddle) {
+        console.error('Ignoring');
+        return;
+      }
 
       const distX = ball.x - paddle.x;
       const distY = ball.y - paddle.y;
@@ -234,11 +242,11 @@ class GameScreen {
       // ctx.fill();
 
       paddle.color = this.getRandomColor();
-      this.collided = true;
+      this.collidedPaddle = true;
       return true;
     }
-    // this.collided = false;
-    this.collided = false;
+    // this.collidedPaddle = false;
+    this.collidedPaddle = false;
     return false;
   }
 

@@ -19,19 +19,6 @@ class Ball {
   }
 
   move() {
-    // if (this.y + this.dy <= this.radius ||
-    //   this.y + this.dy > this.canvas.height - this.radius) {
-    //   this.dy = -this.dy;
-    // }
-    //
-    // if (this.x + this.dx <= this.radius ||
-    //   this.x + this.dx > this.canvas.width - this.radius) {
-    //   this.dx = -this.dx;
-    // }
-    console.log("move");
-    console.log(this.dx);
-    console.log(this.dy);
-
     this.x += this.dx;
     this.y += this.dy;
   }

@@ -70,6 +70,12 @@ class GameScreen {
     }
   }
 
+  drawPlayGameMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "black";
+    ctx.fillText("Click to Play", canvas.width / 4.4, canvas.height / 2);
+  }
+
   drawScore(ctx, score) {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
@@ -80,7 +86,6 @@ class GameScreen {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Lives: " + lives, 440, 20);
-    // console.log(lives);
   }
 
   draw() {
@@ -136,6 +141,7 @@ class GameScreen {
     if (this.playing) {
       requestAnimationFrame(this.draw);
     } else {
+      this.drawPlayGameMessage(this.ctx, this.canvas);
       document.addEventListener("click", this.startGameHandler, false);
     }
   }

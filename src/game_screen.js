@@ -9,6 +9,9 @@ class GameScreen {
     this.canvas = canvas;
     this.collidedPaddle = false;
 
+    //Game start
+    this.playing = false;
+
     //Score Information
     this.score = 0;
 
@@ -17,11 +20,11 @@ class GameScreen {
 
     //Information for paddle
     this.paddleRadius = 90;
-    this.paddle = new Paddle(canvas, ctx, this.canvas.offsetWidth / 2, this.paddleRadius, this.getRandomColor());
+    this.paddle = new Paddle(canvas, ctx, canvas.width / 2, this.paddleRadius, this.getRandomColor());
 
     // Information for ball
     this.ballRadius = 10;
-    this.ball = new Ball(canvas, ctx, canvas.offsetWidth / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
+    this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
     this.bricks = this.populateBricks(8, 9);
@@ -32,8 +35,14 @@ class GameScreen {
     this.draw = this.draw.bind(this);
     // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
     // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
+    this.startGameHandler = this.startGameHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
     this.wallCollision = this.wallCollision.bind(this);
+  }
+
+  startGameHandler(e) {
+    this.playing = true;
+    this.draw();
   }
 
   keyDownEventHandler(e) {
@@ -123,7 +132,12 @@ class GameScreen {
 
     this.ball.move();
     //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
-    requestAnimationFrame(this.draw);
+
+    if (this.playing) {
+      requestAnimationFrame(this.draw);
+    } else {
+      document.addEventListener("click", this.startGameHandler, false);
+    }
   }
 
   wallCollision(ball, canvas, paddle) {

@@ -17,11 +17,11 @@ class GameScreen {
 
     //Information for paddle
     this.paddleRadius = 90;
-    this.paddle = new Paddle(canvas, ctx, this.canvas.width / 2, this.paddleRadius, this.getRandomColor());
+    this.paddle = new Paddle(canvas, ctx, this.canvas.offsetWidth / 2, this.paddleRadius, this.getRandomColor());
 
     // Information for ball
     this.ballRadius = 10;
-    this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
+    this.ball = new Ball(canvas, ctx, canvas.offsetWidth / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
     this.bricks = this.populateBricks(8, 9);
@@ -54,9 +54,10 @@ class GameScreen {
 
   mouseMoveHandler(e) {
     const relativeX = e.clientX;
-    if (relativeX - this.paddle.radius > 0 && relativeX + this.paddle.radius < this.canvas.width) {
-        this.paddle.x = relativeX;
-        // this.paddleCollision(this.ball, this.paddle, this.ctx);
+    const body = document.getElementById("body");
+    
+    if (relativeX - body.offsetWidth * 0.35 - this.paddle.radius > 0 && relativeX + this.paddle.radius < body.offsetWidth * 0.35 + this.canvas.width) {
+        this.paddle.x = relativeX - body.offsetWidth * 0.35;
     }
   }
 
@@ -142,7 +143,7 @@ class GameScreen {
         paddle.x = canvas.width / 2;
         paddle.y = canvas.height;
       } else {
-        alert("GAME OVER");
+        // alert("GAME OVER");
         document.location.reload();
       }
     } else {

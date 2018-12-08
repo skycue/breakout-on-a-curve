@@ -55,7 +55,7 @@ class GameScreen {
   mouseMoveHandler(e) {
     const relativeX = e.clientX;
     const body = document.getElementById("body");
-    
+
     if (relativeX - body.offsetWidth * 0.35 - this.paddle.radius > 0 && relativeX + this.paddle.radius < body.offsetWidth * 0.35 + this.canvas.width) {
         this.paddle.x = relativeX - body.offsetWidth * 0.35;
     }
@@ -64,13 +64,13 @@ class GameScreen {
   drawScore(ctx, score) {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score: " + score, 8, 400);
+    ctx.fillText("Score: " + score, 5, 20);
   }
 
   drawLives(ctx, lives) {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Lives: " + lives, 208, 400);
+    ctx.fillText("Lives: " + lives, 440, 20);
     // console.log(lives);
   }
 
@@ -283,11 +283,12 @@ class GameScreen {
 
   populateBricks(numRows, numCols) {
     const bricks = [];
+    const topPadding = 40;
 
     for (let i = 0; i < numRows; i++) {
       const row = [];
       for (let j = 0; j < numCols; j++) {
-        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), i * (this.canvas.height / 3.5 / numRows)], this.canvas.width / numCols, this.canvas.height / 3.5 / numRows));
+        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), topPadding + i * (this.canvas.height / 3.5 / numRows)], this.canvas.width / numCols, (this.canvas.height - topPadding) / 3.5 / numRows));
       }
       bricks.push(row);
     }

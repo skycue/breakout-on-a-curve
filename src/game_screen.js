@@ -127,7 +127,7 @@ class GameScreen {
   }
 
   wallCollision(ball, canvas, paddle) {
-    const topWallCollide = ball.y + ball.dy <= ball.radius;
+    const topWallCollide = ball.y + ball.dy <= ball.radius + 30;
     const bottomWallCollide = ball.y + ball.dy > canvas.height - ball.radius;
     const leftWallCollide = ball.x + ball.dx <= ball.radius;
     const rightWallCollide = ball.x + ball.dx > canvas.width - ball.radius;
@@ -148,6 +148,7 @@ class GameScreen {
       }
     } else {
       if (topWallCollide) {
+        debugger
         ball.dy = -ball.dy;
         ball.y += ball.dy;
       }

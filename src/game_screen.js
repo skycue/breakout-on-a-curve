@@ -12,6 +12,9 @@ class GameScreen {
     //Game start
     this.playing = false;
 
+    //Game won
+    this.won = false;
+
     //Score Information
     this.score = 0;
 
@@ -27,7 +30,7 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(8, 9);
+    this.bricks = this.populateBricks(1, 1);
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -41,6 +44,7 @@ class GameScreen {
   }
 
   startGameHandler(e) {
+    // debugger
     this.playing = true;
     this.draw();
   }
@@ -74,6 +78,15 @@ class GameScreen {
     ctx.font = "bold 45px Comic Sans MS";
     ctx.fillStyle = "black";
     ctx.fillText("Click to Play", canvas.width / 4.4, canvas.height / 2);
+  }
+
+  drawWinningMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "grey";
+    ctx.fillText("Cleared!", canvas.width / 3.2, canvas.height / 2);
+    ctx.font = "bold 30px Comic Sans MS";
+    ctx.fillStyle = "lightergrey";
+    ctx.fillText("Click to play again!", canvas.width / 4.4, canvas.height / 2 + 45);
   }
 
   drawScore(ctx, score) {
@@ -138,12 +151,25 @@ class GameScreen {
     this.ball.move();
     //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
 
+    //Draw win message
+    if (this.score === 1) {
+      this.playing = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height / 2);
+      this.ball.draw();
+      this.drawScore(this.ctx, this.score);
+      this.drawLives(this.ctx, this.lives);
+      this.drawWinningMessage(this.ctx, this.canvas);
+      document.addEventListener("click", () => document.location.reload(), false);
+      // document.location.reload();
+    }
+
     if (this.playing) {
       requestAnimationFrame(this.draw);
-    } else {
+    } else if (this.score < 1) {
       this.drawPlayGameMessage(this.ctx, this.canvas);
       document.addEventListener("click", this.startGameHandler, false);
     }
+
   }
 
   wallCollision(ball, canvas, paddle) {

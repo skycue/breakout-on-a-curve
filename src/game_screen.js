@@ -30,8 +30,8 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.brickRows = 2;
-    this.brickCols = 2;
+    this.brickRows = 3;
+    this.brickCols = 9;
     this.bricks = this.populateBricks(this.brickRows, this.brickCols);
 
     this.rightKeyDown = false;
@@ -346,7 +346,7 @@ class GameScreen {
     for (let i = 0; i < numRows; i++) {
       const row = [];
       for (let j = 0; j < numCols; j++) {
-        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), topPadding + i * (this.canvas.height / 3.5 / numRows)], this.canvas.width / numCols, (this.canvas.height - topPadding) / 3.5 / numRows));
+        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), topPadding + i * (this.canvas.height / 3.5 / numRows)], (this.canvas.width - topPadding) / numCols, 15));
       }
       bricks.push(row);
     }

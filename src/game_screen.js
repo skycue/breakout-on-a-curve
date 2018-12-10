@@ -19,7 +19,7 @@ class GameScreen {
     this.score = 0;
 
     //Lives Information
-    this.lives = 3;
+    this.lives = 0;
 
     //Information for paddle
     this.paddleRadius = 90;
@@ -30,7 +30,7 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(1, 1);
+    this.bricks = this.populateBricks(2, 2);
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -87,6 +87,15 @@ class GameScreen {
     ctx.font = "bold 30px Comic Sans MS";
     ctx.fillStyle = "lightergrey";
     ctx.fillText("Click to play again!", canvas.width / 4.4, canvas.height / 2 + 45);
+  }
+
+  drawGameOverMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "grey";
+    ctx.fillText("Game Over!", canvas.width / 4, canvas.height / 2);
+    ctx.font = "bold 30px Comic Sans MS";
+    ctx.fillStyle = "lightergrey";
+    ctx.fillText("Click to try again!", canvas.width / 4.2, canvas.height / 2 + 45);
   }
 
   drawScore(ctx, score) {
@@ -152,7 +161,7 @@ class GameScreen {
     //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
 
     //Draw win message
-    if (this.score === 1) {
+    if (this.score === 2 * 2) {
       this.playing = false;
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height / 2);
       this.ball.draw();
@@ -165,7 +174,7 @@ class GameScreen {
 
     if (this.playing) {
       requestAnimationFrame(this.draw);
-    } else if (this.score < 1) {
+    } else if (this.score < 2 * 2) {
       this.drawPlayGameMessage(this.ctx, this.canvas);
       document.addEventListener("click", this.startGameHandler, false);
     }
@@ -189,8 +198,8 @@ class GameScreen {
         paddle.x = canvas.width / 2;
         paddle.y = canvas.height;
       } else {
-        // alert("GAME OVER");
-        document.location.reload();
+        this.drawGameOverMessage(this.ctx, this.canvas);
+        document.addEventListener("click", () => document.location.reload(), false);
       }
     } else {
       if (topWallCollide) {

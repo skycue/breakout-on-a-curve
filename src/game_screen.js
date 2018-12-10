@@ -30,7 +30,9 @@ class GameScreen {
     this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
 
     // Information for bricks
-    this.bricks = this.populateBricks(2, 2);
+    this.brickRows = 2;
+    this.brickCols = 2;
+    this.bricks = this.populateBricks(this.brickRows, this.brickCols);
 
     this.rightKeyDown = false;
     this.leftKeyDown = false;
@@ -161,7 +163,7 @@ class GameScreen {
     //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
 
     //Draw win message
-    if (this.score === 2 * 2) {
+    if (this.score === this.brickRows * this.brickCols) {
       this.playing = false;
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height / 2);
       this.ball.draw();
@@ -174,7 +176,7 @@ class GameScreen {
 
     if (this.playing) {
       requestAnimationFrame(this.draw);
-    } else if (this.score < 2 * 2) {
+    } else if (this.score < this.brickRows * this.brickCols) {
       this.drawPlayGameMessage(this.ctx, this.canvas);
       document.addEventListener("click", this.startGameHandler, false);
     }

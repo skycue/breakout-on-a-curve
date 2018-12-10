@@ -46,7 +46,6 @@ class GameScreen {
   }
 
   startGameHandler(e) {
-    // debugger
     this.playing = true;
     this.draw();
   }
@@ -205,7 +204,6 @@ class GameScreen {
       }
     } else {
       if (topWallCollide) {
-        debugger
         ball.dy = -ball.dy;
         ball.y += ball.dy;
       }

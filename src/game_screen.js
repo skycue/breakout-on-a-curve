@@ -99,15 +99,15 @@ class GameScreen {
   }
 
   drawScore(ctx, score) {
-    ctx.font = "16px Arial";
+    ctx.font = "bold 22px Comic Sans MS";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score: " + score, 5, 20);
+    ctx.fillText("Score: " + score, 5, 24);
   }
 
   drawLives(ctx, lives) {
-    ctx.font = "16px Arial";
+    ctx.font = "bold 22px Comic Sans MS";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Lives: " + lives, 440, 20);
+    ctx.fillText("Lives: " + lives, 410, 24);
   }
 
   draw() {

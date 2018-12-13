@@ -187,7 +187,7 @@ class GameScreen {
     this.score = 0;
 
     //Lives Information
-    this.lives = 0;
+    this.lives = 2;
 
     //Information for paddle
     this.paddleRadius = 90;
@@ -403,8 +403,8 @@ class GameScreen {
 
         const ballInXRange = ballPos[0] > brickPos[0] && ballPos[0] < brickPos[0] + brick.width;
         const ballInYRange = ballPos[1] > brickPos[1] && ballPos[1] < brickPos[1] + brick.height;
-        const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height;
-        const ballTouchBrickTop = ballPos[1] + ball.radius >= brickPos[1] && ball[1] + ball.radius < brickPos[1] + brick.height;
+        const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height && ballPos[1] - ball.radius > brickPos[1];
+        const ballTouchBrickTop = ballPos[1] + ball.radius >= brickPos[1] && ballPos[1] + ball.radius < brickPos[1] + brick.height;
 
         const ballTouchBrickLeft = ballPos[0] < brickPos[0] && ballPos[0] + ball.radius >= brickPos[0];
         const ballTouchBrickRight = ballPos[0] > brickPos[0] && ballPos[0] - ball.radius <= brickPos[0] + brick.width;

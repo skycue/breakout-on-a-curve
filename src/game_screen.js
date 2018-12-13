@@ -144,6 +144,8 @@ class GameScreen {
         this.ball.dy = -1 * this.ball.dy;
       } else if (ballBrickCollision.collidedSide) {
         this.ball.dx = -1 * this.ball.dx;
+      } else if (ballBrickCollision.collidedTop) {
+        this.ball.dy = -1 * this.ball.dy;
       }
       this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
 
@@ -234,6 +236,7 @@ class GameScreen {
         const ballInXRange = ballPos[0] > brickPos[0] && ballPos[0] < brickPos[0] + brick.width;
         const ballInYRange = ballPos[1] > brickPos[1] && ballPos[1] < brickPos[1] + brick.height;
         const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height;
+        const ballTouchBrickTop = ballPos[1] + ball.radius >= brickPos[1] && ball[1] + ball.radius < brickPos[1] + brick.height;
 
         const ballTouchBrickLeft = ballPos[0] < brickPos[0] && ballPos[0] + ball.radius >= brickPos[0];
         const ballTouchBrickRight = ballPos[0] > brickPos[0] && ballPos[0] - ball.radius <= brickPos[0] + brick.width;
@@ -245,6 +248,8 @@ class GameScreen {
           return {collided: true, pos: [row, col], collidedBottom: true};
         } else if ((a) || (b)) {
           return {collided: true, pos: [row, col], collidedSide: true};
+        } else if (ballInXRange && ballTouchBrickTop) {
+          return {collided: true, pos: [row, col], collidedTop: true};
         }
       }
     }

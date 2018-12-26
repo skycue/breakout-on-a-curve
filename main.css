@@ -1,0 +1,22 @@
+html {
+  height: 100%;
+  overflow: hidden;
+  transform: translate(-20px, 0px) rotate(11deg);
+}
+
+body {
+    display: flex;
+    background-image: url(paper.jpeg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 110%;
+    height: 100%;
+}
+
+canvas {
+    width: 30%;
+    margin: auto auto;
+    cursor: auto;
+    transform: none;
+    transform: translate(20px, 0px) rotate(349deg);
+}

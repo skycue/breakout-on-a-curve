@@ -262,14 +262,6 @@ class GameScreen {
       if (dyNew > 0) {
         dyNew *= -1;
       }
-
-      // dyNew -= dyNew;
-      // if (dyNew === 0) {
-      //   console.warn('0 case');
-      //   dyNew -= 6;
-      // }
-      // console.warn('Original Y Value: ' + originalY);
-      // console.warn('New Y Value: ' + (dyNew + ball.y));
     }
 
     return dyNew;
@@ -283,22 +275,7 @@ class GameScreen {
 
     if (dist <= ball.radius + paddle.radius) {
       if (this.collidedPaddle) {
-        // console.error('Ignoring');
-        // console.error('y');
-        // console.log(ball.y);
-        // console.error('x');
-        // console.log(ball.x);
         return;
-      } else {
-        // console.error('1st collision');
-        // console.error('initial y');
-        // console.error(ball.y);
-        // console.error('initial x');
-        // console.error(ball.x);
-        // console.error('initial dy');
-        // console.error(ball.dy);
-        // console.error('initial dx');
-        // console.error(ball.dx);
       }
 
       const originalY = ball.y;
@@ -325,16 +302,6 @@ class GameScreen {
 
       ball.x += ball.dx;
       ball.y += ball.dy;
-
-      // console.log("hit");
-      // console.log('dy after');
-      // console.log(ball.dy);
-      // console.log('dx after');
-      // console.log(ball.dx);
-      // console.log('y after');
-      // console.log(ball.y);
-      // console.log('x after');
-      // console.log(ball.x);
 
       paddle.color = this.getRandomColor();
       this.collidedPaddle = true;

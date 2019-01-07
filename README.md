@@ -1,5 +1,5 @@
 # Breakout on a Curve
-[Live](https://www.curved-breakout.herokuapp.com)
+[Live](https://curved-breakout.herokuapp.com)
 
 
 ### MVP

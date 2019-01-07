@@ -1,6 +1,8 @@
 # Breakout on a Curve
-[Live](https://curved-breakout.herokuapp.com)
 
+[Breakout on a Curve](https://curved-breakout.herokuapp.com) is a twist to the old classic Breakout game with a semicircular paddle.
+
+![Game Screenshot](game-screenshot.png)
 
 ### MVP
 In Breakout, users will be able to:

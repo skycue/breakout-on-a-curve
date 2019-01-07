@@ -4,6 +4,11 @@
 
 ![Game Screenshot](game-screenshot.png)
 
+## Gameplay
+The goal of Breakout on a Curve is to clear all the bricks while keeping the ball from hitting the bottom of the game screen before running out of lives.
+
+The player can control the movement of the paddle by moving the mouse left and right.  With the semicircular paddle, as opposed to a regular, rectangular paddle, the angle of the incoming ball and its point of contact with the paddle together determine the direction of the ball after collision with the paddle.  Thus, the player can utilize the circular surface of the paddle to gain a greater control of the ball's movement.
+
 ### MVP
 In Breakout, users will be able to:
 * Start, pause, and reset the game

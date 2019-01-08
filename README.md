@@ -1,6 +1,6 @@
 # Breakout on a Curve
 
-[Breakout on a Curve](https://curved-breakout.herokuapp.com) is a twist to the old classic Breakout game with a semicircular paddle.
+[Breakout on a Curve](https://curved-breakout.herokuapp.com) is a twist to the old classic Breakout game with a semicircular paddle developed using JavaScript for game logic and HTML5 Canvas element for rendering.
 
 ![Game Screenshot](game-screenshot.png)
 
@@ -11,6 +11,7 @@ The player can control the movement of the paddle by moving the mouse left and r
 
 ## Features
 ### Semicircular Paddle Reflection Logic
+The ball's direction after paddle collision was determined by combining the Law of Reflection and mathematics of trigonometry.
 
 ```javascript
     const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);

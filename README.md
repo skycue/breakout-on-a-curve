@@ -30,7 +30,7 @@ Below a certain point on the paddle, there is a greater possibility for the ball
 ```
 
 ```javascript
-  dyRequirePositive(ball, originalY, dyNew) {
+    dyRequirePositive(ball, originalY, dyNew) {
     while (dyNew + ball.y >= originalY) {
       if (dyNew > 0) {
         dyNew *= -1;
@@ -38,5 +38,5 @@ Below a certain point on the paddle, there is a greater possibility for the ball
     }
 
     return dyNew;
-  }
+    }
 ```

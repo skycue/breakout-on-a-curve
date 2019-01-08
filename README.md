@@ -13,6 +13,10 @@ The player can control the movement of the paddle by moving the mouse left and r
 ### Semicircular Paddle Reflection Logic
 
 ```javascript
+    const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
+    .
+    .
+    .
     const distX = ball.x - paddle.x;
     const distY = ball.y - paddle.y;
     const dx = ball.dx;

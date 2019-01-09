@@ -11,19 +11,16 @@ class Paddle {
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
-    // this.ctx.closePath();
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
     this.ctx.closePath();
-    // this.ctx.strokeStyle = "blue";
-    // this.ctx.stroke();
   }
 
   move(leftKeyDown, rightKeyDown) {
     if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
-      this.x += 2;
+      this.x += 4;
     } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
-      this.x -= 2;
+      this.x -= 4;
     }
   }
 }

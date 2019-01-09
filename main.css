@@ -1,22 +1,52 @@
 html {
   height: 100%;
   overflow: hidden;
-  transform: translate(-20px, 0px) rotate(11deg);
 }
 
 body {
-    display: flex;
-    background-image: url(paper.jpeg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 110%;
-    height: 100%;
+  display: flex;
+  background-image: url(paper.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100%;
 }
 
 canvas {
-    width: 30%;
-    margin: auto auto;
-    cursor: auto;
-    transform: none;
-    transform: translate(20px, 0px) rotate(349deg);
+  width: 30%;
+  margin: auto auto;
+  cursor: auto;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 4%;
+  left: 2%;
+  width: 20%;
+}
+
+.personal-links {
+  display: flex;
+  width: 100%;
+  margin: auto auto;
+}
+
+.github-link,
+.linkedin-link {
+  width: 100%;
+  padding: 0px 5%;
+}
+
+.github-logo,
+.linkedin-logo {
+  height: 100%;
+  width: 100%;
+}
+
+.credits {
+  /* margin: auto auto; */
+  text-align: center;
+  font-size: 30px;
 }

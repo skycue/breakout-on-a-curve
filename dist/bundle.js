@@ -1,2 +1,599 @@
-!function(t){var i={};function s(e){if(i[e])return i[e].exports;var h=i[e]={i:e,l:!1,exports:{}};return t[e].call(h.exports,h,h.exports,s),h.l=!0,h.exports}s.m=t,s.c=i,s.d=function(t,i,e){s.o(t,i)||Object.defineProperty(t,i,{enumerable:!0,get:e})},s.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},s.t=function(t,i){if(1&i&&(t=s(t)),8&i)return t;if(4&i&&"object"==typeof t&&t&&t.__esModule)return t;var e=Object.create(null);if(s.r(e),Object.defineProperty(e,"default",{enumerable:!0,value:t}),2&i&&"string"!=typeof t)for(var h in t)s.d(e,h,function(i){return t[i]}.bind(null,h));return e},s.n=function(t){var i=t&&t.__esModule?function(){return t.default}:function(){return t};return s.d(i,"a",i),i},s.o=function(t,i){return Object.prototype.hasOwnProperty.call(t,i)},s.p="",s(s.s=0)}([function(t,i,s){const e=s(1);document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementById("myCanvas"),i=t.getContext("2d");new e(t,i).draw()})},function(t,i,s){const e=s(2),h=s(3),l=s(4),o=s(5);t.exports=class{constructor(t,i){this.ctx=i,this.canvas=t,this.collidedPaddle=!1,this.playing=!1,this.won=!1,this.score=0,this.lives=2,this.paddleRadius=90,this.paddle=new h(t,i,t.width/2,this.paddleRadius,this.getRandomColor()),this.ballRadius=10,this.ball=new e(t,i,t.width/2,t.height-2*this.paddleRadius,this.ballRadius,this.getRandomColor()),this.brickRows=4,this.brickCols=9,this.bricks=this.populateBricks(this.brickRows,this.brickCols),this.rightKeyDown=!1,this.leftKeyDown=!1,this.draw=this.draw.bind(this),this.startGameHandler=this.startGameHandler.bind(this),this.mouseMoveHandler=this.mouseMoveHandler.bind(this),this.wallCollision=this.wallCollision.bind(this)}startGameHandler(t){this.playing=!0,this.draw()}keyDownEventHandler(t){39===t.keyCode?this.rightKeyDown=!0:37===t.keyCode&&(this.leftKeyDown=!0)}keyUpEventHandler(t){39===t.keyCode?this.rightKeyDown=!1:37===t.keyCode&&(this.leftKeyDown=!1)}mouseMoveHandler(t){const i=t.clientX,s=document.getElementById("body");i-.35*s.offsetWidth-this.paddle.radius>0&&i+this.paddle.radius<.35*s.offsetWidth+this.canvas.width&&(this.paddle.x=i-.35*s.offsetWidth)}drawPlayGameMessage(t,i){t.font="bold 45px Comic Sans MS",t.fillStyle="black",t.fillText("Click to Play",i.width/4.4,i.height/2)}drawWinningMessage(t,i){t.font="bold 45px Comic Sans MS",t.fillStyle="grey",t.fillText("Cleared!",i.width/3.2,i.height/2),t.font="bold 30px Comic Sans MS",t.fillStyle="lightergrey",t.fillText("Click to play again!",i.width/4.4,i.height/2+45)}drawGameOverMessage(t,i){t.font="bold 45px Comic Sans MS",t.fillStyle="grey",t.fillText("Game Over!",i.width/4,i.height/2),t.font="bold 30px Comic Sans MS",t.fillStyle="lightergrey",t.fillText("Click to try again!",i.width/4.2,i.height/2+45)}drawScore(t,i){t.font="bold 22px Comic Sans MS",t.fillStyle="#0095DD",t.fillText("Score: "+i,5,24)}drawLives(t,i){t.font="bold 22px Comic Sans MS",t.fillStyle="#0095DD",t.fillText("Lives: "+i,410,24)}draw(){this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height),this.paddle.draw(),this.ball.draw(),this.drawScore(this.ctx,this.score),this.drawLives(this.ctx,this.lives),this.bricks.forEach(t=>{t.forEach(t=>t.draw())});const t=this.ballCollidedBrick(this.ball,this.bricks);if(t.collided){let i=this.getRandomColor();for(;i===this.ball.color;)i=this.getRandomColor();this.ball.color=i,t.collidedBottom?this.ball.dy=-1*this.ball.dy:t.collidedSide?this.ball.dx=-1*this.ball.dx:t.collidedTop&&(this.ball.dy=-1*this.ball.dy),this.bricks[t.pos[0]][t.pos[1]].visible=!1,this.score+=7}this.paddleCollision(this.ball,this.paddle,this.ctx),this.wallCollision(this.ball,this.canvas,this.paddle),document.addEventListener("mousemove",this.mouseMoveHandler,!1),this.ball.move(),this.score===this.brickRows*this.brickCols*7&&(this.playing=!1,this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height/2),this.ball.draw(),this.drawScore(this.ctx,this.score),this.drawLives(this.ctx,this.lives),this.drawWinningMessage(this.ctx,this.canvas),document.addEventListener("click",()=>document.location.reload(),!1)),this.playing?requestAnimationFrame(this.draw):this.score<this.brickRows*this.brickCols*7&&(this.drawPlayGameMessage(this.ctx,this.canvas),document.addEventListener("click",this.startGameHandler,!1))}wallCollision(t,i,s){const e=t.y+t.dy<=t.radius+30,h=t.y+t.dy>i.height-t.radius,l=t.x+t.dx<=t.radius,o=t.x+t.dx>i.width-t.radius;h?this.lives>0?(this.lives-=1,t.x=i.width/2,t.y=i.height-2*this.paddleRadius,t.dx=0,t.dy=6,s.x=i.width/2,s.y=i.height):(this.drawGameOverMessage(this.ctx,this.canvas),document.addEventListener("click",()=>document.location.reload(),!1)):(e&&(t.dy=-t.dy,t.y+=t.dy),(l||o)&&(t.dx=-t.dx,t.x+=t.dx),this.collidedPaddle=!1)}ballCollidedBrick(t,i){const s=[t.x,t.y];for(let e=0;e<i.length;e++)for(let h=0;h<i[e].length;h++){const l=i[e][h];if(!l.visible)continue;const o=l.pos,a=s[0]>o[0]&&s[0]<o[0]+l.width,d=s[1]>o[1]&&s[1]<o[1]+l.height,r=s[1]-t.radius<=o[1]+l.height&&s[1]-t.radius>o[1],n=s[1]+t.radius>=o[1]&&s[1]+t.radius<o[1]+l.height,c=s[0]<o[0]&&s[0]+t.radius>=o[0],u=s[0]>o[0]&&s[0]-t.radius<=o[0]+l.width,x=d&&u;if(a&&r)return{collided:!0,pos:[e,h],collidedBottom:!0};if(d&&c||x)return{collided:!0,pos:[e,h],collidedSide:!0};if(a&&n)return{collided:!0,pos:[e,h],collidedTop:!0}}return{collided:!1}}dyRequirePositive(t,i,s){for(;s+t.y>=i;)s>0&&(s*=-1);return s}paddleCollision(t,i,s){const e=t.x+t.dx,h=t.y+t.dy,o=l.distance([e,h],[i.x,i.y]);if(o<=t.radius+i.radius){if(this.collidedPaddle)return;const s=t.y,e=t.x-i.x,h=t.y-i.y,a=t.dx,d=-1*t.dy;let r=-1/Math.pow(o,2)*((Math.pow(e,2)-Math.pow(h,2))*a-2*e*h*d),n=1/Math.pow(o,2)*((Math.pow(h,2)-Math.pow(e,2))*d-2*e*h*a);const c=l.hypotenuse(r,n)/l.hypotenuse(6,6);r/=c,n/=c,n=this.dyRequirePositive(t,s,n),t.dx=r,t.dy=n,t.x+=t.dx,t.y+=t.dy,i.color=this.getRandomColor(),this.collidedPaddle=!0}this.collidedPaddle=!1}populateBricks(t,i){const s=[];for(let e=0;e<t;e++){const h=[];for(let s=0;s<i;s++)h.push(new o(this.ctx,[s*(this.canvas.width/i),40+e*(this.canvas.height/3.5/t)],(this.canvas.width-40)/i,15));s.push(h)}return s}getRandomColor(){let t="#";for(let i=0;i<6;i++)t+="0123456789ABCDEF"[Math.floor(16*Math.random())];return t}}},function(t,i){t.exports=class{constructor(t,i,s,e,h,l){this.canvas=t,this.ctx=i,this.x=s,this.y=e,this.radius=h,this.dx=0,this.dy=6,this.color=l}draw(){this.ctx.beginPath(),this.ctx.arc(this.x,this.y,this.radius,0,2*Math.PI),this.ctx.fillStyle=this.color,this.ctx.fill(),this.ctx.closePath()}move(){this.x+=this.dx,this.y+=this.dy}}},function(t,i){t.exports=class{constructor(t,i,s,e,h){this.ctx=i,this.canvas=t,this.x=s,this.y=t.height,this.radius=e,this.color=h}draw(){this.ctx.beginPath(),this.ctx.arc(this.x,this.canvas.height,this.radius,Math.PI,2*Math.PI),this.ctx.fillStyle=this.color,this.ctx.fill(),this.ctx.closePath()}move(t,i){i&&this.x+50+.5<=this.canvas.width?this.x+=2:t&&this.x-50-.5>=0&&(this.x-=2)}}},function(t,i){const s={distance:function(t,i){const[s,e]=t,[h,l]=i,o=Math.abs(s-h),a=Math.abs(e-l);return Math.sqrt(Math.pow(o,2)+Math.pow(a,2))},hypotenuse:function(t,i){return Math.sqrt(Math.abs(t*t)+Math.abs(i*i))}};t.exports=s},function(t,i){t.exports=class{constructor(t,i,s,e){this.ctx=t,this.pos=i,this.width=s,this.height=e,this.visible=!0}draw(){this.visible&&(this.ctx.beginPath(),this.ctx.rect(this.pos[0],this.pos[1],this.width,this.height),this.ctx.fillStyle="orange",this.ctx.fill(),this.ctx.strokeStyle="purple",this.ctx.stroke(),this.ctx.closePath())}}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./src/ball.js":
+/*!*********************!*\
+  !*** ./src/ball.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Ball {
+  constructor(canvas, ctx, xPos, yPos, radius, color) {
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.x = xPos;
+    this.y = yPos;
+    this.radius = radius;
+    this.dx = 0;
+    this.dy = 6;
+    this.color = color;
+  }
+
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.ctx.fillStyle = this.color;
+    this.ctx.fill();
+    this.ctx.closePath();
+  }
+
+  move() {
+    this.x += this.dx;
+    this.y += this.dy;
+  }
+}
+
+module.exports = Ball;
+
+
+/***/ }),
+
+/***/ "./src/brick.js":
+/*!**********************!*\
+  !*** ./src/brick.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Brick {
+  constructor(ctx, pos, width, height) {
+    this.ctx = ctx;
+    this.pos = pos;
+    this.width = width;
+    this.height = height;
+    this.visible = true;
+  }
+
+  draw() {
+    if (this.visible) {
+      this.ctx.beginPath();
+      this.ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
+      this.ctx.fillStyle = "orange";
+      this.ctx.fill();
+      this.ctx.strokeStyle = "purple";
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
+  }
+}
+
+module.exports = Brick;
+
+
+/***/ }),
+
+/***/ "./src/game_screen.js":
+/*!****************************!*\
+  !*** ./src/game_screen.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Ball = __webpack_require__(/*! ./ball */ "./src/ball.js");
+const Paddle = __webpack_require__(/*! ./paddle */ "./src/paddle.js");
+const Util = __webpack_require__(/*! ./util */ "./src/util.js");
+const Brick = __webpack_require__(/*! ./brick */ "./src/brick.js");
+
+class GameScreen {
+  constructor(canvas, ctx) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.collidedPaddle = false;
+
+    //Game start
+    this.playing = false;
+
+    //Game won
+    this.won = false;
+
+    //Score Information
+    this.score = 0;
+
+    //Lives Information
+    this.lives = 2;
+
+    //Information for paddle
+    this.paddleRadius = 90;
+    this.paddle = new Paddle(canvas, ctx, canvas.width / 2, this.paddleRadius, this.getRandomColor());
+
+    // Information for ball
+    this.ballRadius = 10;
+    this.ball = new Ball(canvas, ctx, canvas.width / 2, canvas.height - 2 * this.paddleRadius, this.ballRadius, this.getRandomColor());
+
+    // Information for bricks
+    this.brickRows = 4;
+    this.brickCols = 9;
+    this.bricks = this.populateBricks(this.brickRows, this.brickCols);
+
+    this.rightKeyDown = false;
+    this.leftKeyDown = false;
+
+    this.draw = this.draw.bind(this);
+    // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
+    // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
+    this.startGameHandler = this.startGameHandler.bind(this);
+    this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    this.wallCollision = this.wallCollision.bind(this);
+  }
+
+  startGameHandler(e) {
+    this.playing = true;
+    this.draw();
+  }
+
+  keyDownEventHandler(e) {
+    if (e.keyCode === 39) {
+      this.rightKeyDown = true;
+    } else if (e.keyCode === 37) {
+      this.leftKeyDown = true;
+    }
+  }
+
+  keyUpEventHandler(e) {
+    if (e.keyCode === 39) {
+      this.rightKeyDown = false;
+    } else if (e.keyCode === 37) {
+      this.leftKeyDown = false;
+    }
+  }
+
+  mouseMoveHandler(e) {
+    const relativeX = e.clientX;
+    const body = document.getElementById("body");
+
+    if (relativeX - body.offsetWidth * 0.35 - this.paddle.radius > 0 && relativeX + this.paddle.radius < body.offsetWidth * 0.35 + this.canvas.width) {
+        this.paddle.x = relativeX - body.offsetWidth * 0.35;
+    }
+  }
+
+  drawPlayGameMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "black";
+    ctx.fillText("Click to Play", canvas.width / 4.4, canvas.height / 2);
+  }
+
+  drawWinningMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "grey";
+    ctx.fillText("Cleared!", canvas.width / 3.2, canvas.height / 2);
+    ctx.font = "bold 30px Comic Sans MS";
+    ctx.fillStyle = "lightergrey";
+    ctx.fillText("Click to play again!", canvas.width / 4.4, canvas.height / 2 + 45);
+  }
+
+  drawGameOverMessage(ctx, canvas) {
+    ctx.font = "bold 45px Comic Sans MS";
+    ctx.fillStyle = "grey";
+    ctx.fillText("Game Over!", canvas.width / 4, canvas.height / 2);
+    ctx.font = "bold 30px Comic Sans MS";
+    ctx.fillStyle = "lightergrey";
+    ctx.fillText("Click to try again!", canvas.width / 4.2, canvas.height / 2 + 45);
+  }
+
+  drawScore(ctx, score) {
+    ctx.font = "bold 22px Comic Sans MS";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: " + score, 5, 24);
+  }
+
+  drawLives(ctx, lives) {
+    ctx.font = "bold 22px Comic Sans MS";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: " + lives, 410, 24);
+  }
+
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Draw paddle
+    this.paddle.draw();
+
+    // Draw ball
+    this.ball.draw();
+
+    //Draw score
+    this.drawScore(this.ctx, this.score);
+
+    //Draw lives
+    this.drawLives(this.ctx, this.lives);
+
+    // Draw bricks
+    this.bricks.forEach(row => {
+      row.forEach(brick => brick.draw());
+    })
+
+    const ballBrickCollision = this.ballCollidedBrick(this.ball, this.bricks);
+
+    if (ballBrickCollision.collided) {
+      let newBallColor = this.getRandomColor();
+      while (newBallColor === this.ball.color) {
+        newBallColor = this.getRandomColor();
+      }
+      this.ball.color = newBallColor;
+
+      if (ballBrickCollision.collidedBottom) {
+        this.ball.dy = -1 * this.ball.dy;
+      } else if (ballBrickCollision.collidedSide) {
+        this.ball.dx = -1 * this.ball.dx;
+      } else if (ballBrickCollision.collidedTop) {
+        this.ball.dy = -1 * this.ball.dy;
+      }
+      this.bricks[ballBrickCollision.pos[0]][ballBrickCollision.pos[1]].visible = false;
+
+      this.score += 7;
+    }
+
+    this.paddleCollision(this.ball, this.paddle, this.ctx);
+
+    this.wallCollision(this.ball, this.canvas, this.paddle);
+
+    // document.addEventListener("keydown", this.keyDownEventHandler, false);
+    // document.addEventListener("keyup", this.keyUpEventHandler, false);
+    document.addEventListener("mousemove", this.mouseMoveHandler, false);
+
+    this.ball.move();
+    //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+
+    //Draw win message
+    if (this.score === this.brickRows * this.brickCols * 7) {
+      this.playing = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height / 2);
+      this.ball.draw();
+      this.drawScore(this.ctx, this.score);
+      this.drawLives(this.ctx, this.lives);
+      this.drawWinningMessage(this.ctx, this.canvas);
+      document.addEventListener("click", () => document.location.reload(), false);
+      // document.location.reload();
+    }
+
+    if (this.playing) {
+      requestAnimationFrame(this.draw);
+    } else if (this.score < this.brickRows * this.brickCols * 7) {
+      this.drawPlayGameMessage(this.ctx, this.canvas);
+      document.addEventListener("click", this.startGameHandler, false);
+    }
+
+  }
+
+  wallCollision(ball, canvas, paddle) {
+    const topWallCollide = ball.y + ball.dy <= ball.radius + 30;
+    const bottomWallCollide = ball.y + ball.dy > canvas.height - ball.radius;
+    const leftWallCollide = ball.x + ball.dx <= ball.radius;
+    const rightWallCollide = ball.x + ball.dx > canvas.width - ball.radius;
+
+    if (bottomWallCollide) {
+      if (this.lives > 0) {
+        this.lives -= 1;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height - 2 * this.paddleRadius;
+        ball.dx = 0;
+        ball.dy = 6;
+
+        paddle.x = canvas.width / 2;
+        paddle.y = canvas.height;
+      } else {
+        this.drawGameOverMessage(this.ctx, this.canvas);
+        document.addEventListener("click", () => document.location.reload(), false);
+      }
+    } else {
+      if (topWallCollide) {
+        ball.dy = -ball.dy;
+        ball.y += ball.dy;
+      }
+
+      if (leftWallCollide || rightWallCollide) {
+        ball.dx = -ball.dx;
+        ball.x += ball.dx;
+      }
+
+      this.collidedPaddle = false;
+    }
+  }
+
+  ballCollidedBrick(ball, bricks) {
+
+    const ballPos = [ball.x, ball.y];
+
+    for (let row = 0; row < bricks.length; row++) {
+      for (let col = 0; col < bricks[row].length; col++) {
+        const brick = bricks[row][col];
+
+        if (!brick.visible) {
+          continue;
+        }
+
+        const brickPos = brick.pos;
+
+        const ballInXRange = ballPos[0] > brickPos[0] && ballPos[0] < brickPos[0] + brick.width;
+        const ballInYRange = ballPos[1] > brickPos[1] && ballPos[1] < brickPos[1] + brick.height;
+        const ballTouchBrickBottom = ballPos[1] - ball.radius <= brickPos[1] + brick.height && ballPos[1] - ball.radius > brickPos[1];
+        const ballTouchBrickTop = ballPos[1] + ball.radius >= brickPos[1] && ballPos[1] + ball.radius < brickPos[1] + brick.height;
+
+        const ballTouchBrickLeft = ballPos[0] < brickPos[0] && ballPos[0] + ball.radius >= brickPos[0];
+        const ballTouchBrickRight = ballPos[0] > brickPos[0] && ballPos[0] - ball.radius <= brickPos[0] + brick.width;
+
+        const a = ballInYRange && ballTouchBrickLeft;
+        const b = ballInYRange && ballTouchBrickRight;
+        // Case 1: Ball touches bottom of brick
+        if (ballInXRange && ballTouchBrickBottom) {
+          return {collided: true, pos: [row, col], collidedBottom: true};
+        } else if ((a) || (b)) {
+          return {collided: true, pos: [row, col], collidedSide: true};
+        } else if (ballInXRange && ballTouchBrickTop) {
+          return {collided: true, pos: [row, col], collidedTop: true};
+        }
+      }
+    }
+
+    return {collided: false};
+  }
+
+  dyRequirePositive(ball, originalY, dyNew) {
+    while (dyNew + ball.y >= originalY) {
+      if (dyNew > 0) {
+        dyNew *= -1;
+      }
+    }
+
+    return dyNew;
+  }
+
+  paddleCollision(ball, paddle, ctx) {
+
+    const nextX = ball.x + ball.dx;
+    const nextY = ball.y + ball.dy;
+    const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
+
+    if (dist <= ball.radius + paddle.radius) {
+      if (this.collidedPaddle) {
+        return;
+      }
+
+      const originalY = ball.y;
+
+      const distX = ball.x - paddle.x;
+      const distY = ball.y - paddle.y;
+      const dx = ball.dx;
+      const dy = -1 * ball.dy;
+
+      let dxNew = ((-1 / Math.pow(dist, 2)) * ((Math.pow(distX, 2) - Math.pow(distY, 2)) * dx - (2 * distX * distY * dy)));
+      let dyNew = ((1 / Math.pow(dist, 2)) * ((Math.pow(distY, 2) - Math.pow(distX, 2)) * dy - (2 * distX * distY * dx)));
+
+      const hypo = Util.hypotenuse(dxNew, dyNew);
+      const wantedSpeed = Util.hypotenuse(6, 6);
+      const ratio = hypo / wantedSpeed;
+
+      dxNew = dxNew / ratio;
+      dyNew = dyNew / ratio;
+
+      dyNew = this.dyRequirePositive(ball, originalY, dyNew);
+
+      ball.dx = dxNew;
+      ball.dy = dyNew;
+
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      paddle.color = this.getRandomColor();
+      this.collidedPaddle = true;
+    }
+    this.collidedPaddle = false;
+  }
+
+  populateBricks(numRows, numCols) {
+    const bricks = [];
+    const topPadding = 40;
+
+    for (let i = 0; i < numRows; i++) {
+      const row = [];
+      for (let j = 0; j < numCols; j++) {
+        row.push(new Brick(this.ctx, [j * (this.canvas.width / numCols), topPadding + i * (this.canvas.height / 3.5 / numRows)], (this.canvas.width - topPadding) / numCols, 15));
+      }
+      bricks.push(row);
+    }
+    return bricks;
+  }
+
+  getRandomColor() {
+    const letters = "0123456789ABCDEF";
+
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+  }
+}
+
+module.exports = GameScreen;
+
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameScreen = __webpack_require__(/*! ./game_screen */ "./src/game_screen.js");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("myCanvas");
+  const ctx = canvas.getContext("2d");
+  new GameScreen(canvas, ctx).draw();
+});
+
+
+/***/ }),
+
+/***/ "./src/paddle.js":
+/*!***********************!*\
+  !*** ./src/paddle.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Paddle {
+  constructor(canvas, ctx, xPos, paddleRadius, color) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.x = xPos;
+    this.y = canvas.height;
+    this.radius = paddleRadius;
+    this.color = color;
+  }
+
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
+    // this.ctx.closePath();
+    this.ctx.fillStyle = this.color;
+    this.ctx.fill();
+    this.ctx.closePath();
+    // this.ctx.strokeStyle = "blue";
+    // this.ctx.stroke();
+  }
+
+  move(leftKeyDown, rightKeyDown) {
+    if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
+      this.x += 2;
+    } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
+      this.x -= 2;
+    }
+  }
+}
+
+module.exports = Paddle;
+
+
+/***/ }),
+
+/***/ "./src/util.js":
+/*!*********************!*\
+  !*** ./src/util.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const Util = {
+  distance: function(pos1, pos2) {
+    const [x1, y1] = pos1;
+    const [x2, y2] = pos2;
+
+    const dx = Math.abs(x1 - x2);
+    const dy = Math.abs(y1 - y2);
+
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  },
+
+  hypotenuse: function(a, b) {
+    return Math.sqrt(Math.abs(a * a) + Math.abs(b * b));
+  }
+}
+
+module.exports = Util;
+
+
+/***/ })
+
+/******/ });
 //# sourceMappingURL=bundle.js.map

@@ -205,8 +205,8 @@ class GameScreen {
     this.leftKeyDown = false;
 
     this.draw = this.draw.bind(this);
-    // this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
-    // this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
+    this.keyDownEventHandler = this.keyDownEventHandler.bind(this);
+    this.keyUpEventHandler = this.keyUpEventHandler.bind(this);
     this.startGameHandler = this.startGameHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
     this.wallCollision = this.wallCollision.bind(this);
@@ -323,12 +323,12 @@ class GameScreen {
 
     this.wallCollision(this.ball, this.canvas, this.paddle);
 
-    // document.addEventListener("keydown", this.keyDownEventHandler, false);
-    // document.addEventListener("keyup", this.keyUpEventHandler, false);
+    document.addEventListener("keydown", this.keyDownEventHandler, false);
+    document.addEventListener("keyup", this.keyUpEventHandler, false);
     document.addEventListener("mousemove", this.mouseMoveHandler, false);
 
     this.ball.move();
-    //this.paddle.move(this.leftKeyDown, this.rightKeyDown);
+    this.paddle.move(this.leftKeyDown, this.rightKeyDown);
 
     //Draw win message
     if (this.score === this.brickRows * this.brickCols * 7) {
@@ -339,7 +339,6 @@ class GameScreen {
       this.drawLives(this.ctx, this.lives);
       this.drawWinningMessage(this.ctx, this.canvas);
       document.addEventListener("click", () => document.location.reload(), false);
-      // document.location.reload();
     }
 
     if (this.playing) {
@@ -410,6 +409,7 @@ class GameScreen {
 
         const a = ballInYRange && ballTouchBrickLeft;
         const b = ballInYRange && ballTouchBrickRight;
+
         // Case 1: Ball touches bottom of brick
         if (ballInXRange && ballTouchBrickBottom) {
           return {collided: true, pos: [row, col], collidedBottom: true};
@@ -545,19 +545,16 @@ class Paddle {
   draw() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.canvas.height, this.radius, Math.PI, 2 * Math.PI);
-    // this.ctx.closePath();
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
     this.ctx.closePath();
-    // this.ctx.strokeStyle = "blue";
-    // this.ctx.stroke();
   }
 
   move(leftKeyDown, rightKeyDown) {
     if (rightKeyDown && this.x + 50 + 0.5 <= this.canvas.width) {
-      this.x += 2;
+      this.x += 4;
     } else if (leftKeyDown && this.x - 50 - 0.5 >= 0) {
-      this.x -= 2;
+      this.x -= 4;
     }
   }
 }

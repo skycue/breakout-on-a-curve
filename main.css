@@ -49,3 +49,12 @@ canvas {
   text-align: center;
   font-size: 30px;
 }
+
+.credits > a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.credits > a:hover {
+  color: white;
+}

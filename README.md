@@ -14,15 +14,47 @@ The player can control the movement of the paddle by moving the mouse left and r
 The ball's direction after paddle collision was determined by combining the Law of Reflection and mathematics of trigonometry.
 
 ```javascript
-    const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
-    ...
-    const distX = ball.x - paddle.x;
-    const distY = ball.y - paddle.y;
-    const dx = ball.dx;
-    const dy = -1 * ball.dy;
+paddleCollision(ball, paddle, ctx) {
 
-    let dxNew = ((-1 / Math.pow(dist, 2)) * ((Math.pow(distX, 2) - Math.pow(distY, 2)) * dx - (2 * distX * distY * dy)));
-    let dyNew = ((1 / Math.pow(dist, 2)) * ((Math.pow(distY, 2) - Math.pow(distX, 2)) * dy - (2 * distX * distY * dx)));
+    const nextX = ball.x + ball.dx;
+    const nextY = ball.y + ball.dy;
+    const dist = Util.distance([nextX, nextY], [paddle.x, paddle.y]);
+
+    if (dist <= ball.radius + paddle.radius) {
+      if (this.collidedPaddle) {
+        return;
+      }
+
+      const originalY = ball.y;
+
+      const distX = ball.x - paddle.x;
+      const distY = ball.y - paddle.y;
+      const dx = ball.dx;
+      const dy = -1 * ball.dy;
+
+      let dxNew = ((-1 / Math.pow(dist, 2)) * ((Math.pow(distX, 2) - Math.pow(distY, 2)) * dx - (2 * distX * distY * dy)));
+      let dyNew = ((1 / Math.pow(dist, 2)) * ((Math.pow(distY, 2) - Math.pow(distX, 2)) * dy - (2 * distX * distY * dx)));
+
+      const hypo = Util.hypotenuse(dxNew, dyNew);
+      const wantedSpeed = Util.hypotenuse(6, 6);
+      const ratio = hypo / wantedSpeed;
+
+      dxNew = dxNew / ratio;
+      dyNew = dyNew / ratio;
+
+      dyNew = this.dyRequirePositive(ball, originalY, dyNew);
+
+      ball.dx = dxNew;
+      ball.dy = dyNew;
+
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      paddle.color = this.getRandomColor();
+      this.collidedPaddle = true;
+    }
+    this.collidedPaddle = false;
+  }
 ```
 
 ### Adjustment for Better Gameplay

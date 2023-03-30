@@ -1,6 +1,6 @@
 # Breakout on a Curve
 
-[Breakout on a Curve](https://curved-breakout.herokuapp.com) is a twist to the old classic Breakout game with a semicircular paddle developed using JavaScript for game logic and HTML5 Canvas element for rendering.
+Breakout on a Curve is a twist to the old classic Breakout game with a semicircular paddle developed using JavaScript for game logic and HTML5 Canvas element for rendering.
 
 ![Game Screenshot](game-screenshot.png)
 
